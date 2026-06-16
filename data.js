@@ -2,57 +2,101 @@
 // Données du concours, synchronisées à la main depuis le Catalogue des projets IA (Notion).
 // data.js = le seul fichier à éditer pour faire vivre le leaderboard.
 //
-// Ajouter un process validé par un team lead = ajouter un objet dans PROCESSES :
+// PROCESSES : ajouter un process validé par un team lead :
 //   { id: "slug-unique-stable", name: "Nom lisible", author: "Prénom Nom", bu: "SEO", notion: "https://..." }
-// Le champ id ne doit JAMAIS changer une fois posé : il relie le process à ses votes en base.
-// Le +10 de publication est automatique (compté par l'app), pas besoin de le saisir.
+//   id stable et unique (relie le process à ses votes). +10 publication automatique.
+//
+// TEAM : votants = adresses mail @datashake.fr (clé unique anti-doublon, gère les homonymes).
+//   Source = annuaire "100🗺️ Areas/datashake/Team/Annuaire datashake - emails.md".
+//   { e: "email", n: "Nom — BU" } ; e = identifiant stocké, n = libellé affiché.
 // =============================================================================
 
 window.PROCESSES = [
-  // En attente des premiers process validés. Exemple de format :
+  // En attente des premiers process validés. Exemple :
   // { id: "cr-call-auto", name: "CR de call automatisé (Fathom + Notion)", author: "Damien Borieu", bu: "SEO", notion: "" },
 ];
 
-// Liste des collaborateurs datashake pour le champ de vote (autocomplétion).
-// Emoji = équipe. Source : organigramme Notion. Noms complets car beaucoup d'homonymes de prénom.
-// Emojis natifs (SEA) : 🌈 Smarties, 🦊 Foxies, 🌶️ Spicies, ☕️ Cozy, 🍪 Cookiz.
-// Emojis de pôle (choisis, l'organigramme n'en a pas) : 🔍 SEO, 🎨 Studio, 💌 CRM, 🤝 Sales, 👑 Direction, 📋 Admin/RH, 🛠️ Quality/Dev, 📊 Tracking.
 window.TEAM = [
-  // SEO
-  "🔍 Ruben Sebag", "🔍 Damien Borieu", "🔍 Charlie Limbour", "🔍 Manon Masa",
-  "🔍 Jérôme Chamberlain", "🔍 Valentin Lefevre", "🔍 Thibaut Guisnet",
-  "🔍 Théo Steinlen", "🔍 Kiara Jules-Rosette", "🔍 Pierre Gaudard",
-  "🔍 Audrey Chambon", "🔍 Léo Cottu", "🔍 Manon Lamache", "🔍 Hugo Husson",
-  // SEA - Cookiz 🍪
-  "🍪 Florence Pernet", "🍪 Elia Manguso", "🍪 Bérangère Chateigner",
-  "🍪 Juliette Covat", "🍪 Matthieu Soum", "🍪 Constance De Beaulieau",
-  // SEA - Cozy ☕️
-  "☕️ Alex Kartalyan", "☕️ Laurine Hidalgo", "☕️ Dorian Richard",
-  "☕️ Paul Ferreira", "☕️ Tom Hamze", "☕️ Hugo Rabain", "☕️ Clara Husset",
-  "☕️ Maëva Mayé", "☕️ Maëva Garbez",
-  // SEA - Foxies 🦊
-  "🦊 Ryan Curpen", "🦊 Amaury Dormoy", "🦊 Samuel Giles", "🦊 Clara Poncet",
-  "🦊 Nicolas Hay", "🦊 Célia Lambertod",
-  // SEA - Smarties 🌈
-  "🌈 Louis Bonjour", "🌈 Manon Lamarre", "🌈 Éléa Decostaire", "🌈 Elodie Soldo",
-  "🌈 Lenny Lesne", "🌈 Marie-Emmanuelle",
-  // SEA - Spicies 🌶️
-  "🌶️ Olivia Troehler", "🌶️ Jane Bonneville", "🌶️ Solène Perroy",
-  "🌶️ Erwan Tanguy", "🌶️ Emilie Deleigue", "🌶️ Estelle Durivault", "🌶️ Alicia Kremer",
-  // Studio (créa) 🎨
-  "🎨 Charlotte Cohen", "🎨 Nathaniel Benhamou", "🎨 Amina Tahri", "🎨 Elsa Elmalem",
-  "🎨 Kevin Épée", "🎨 Yanis Daubié", "🎨 Arthur Privat", "🎨 Marlène Adjovi",
-  // CRM 💌
-  "💌 Morgane Chabagny", "💌 Liam Laribi", "💌 Lou Verplancke", "💌 Mathilde Chabert",
-  // Sales 🤝
-  "🤝 Vincent Coupat", "🤝 Lilian Scarpino", "🤝 Emma Bonneville", "🤝 Sacha Cardine",
-  "🤝 Tom Cayer-Barrioz", "🤝 Félix Horréard",
-  // Tracking 📊
-  "📊 Julian Gillot",
-  // Quality & Dev 🛠️
-  "🛠️ Clara Magnin", "🛠️ Sami Hadj-Chaouch",
-  // Admin & RH 📋
-  "📋 Marion Péan", "📋 Théodore Fresnais", "📋 Audrey Ortega",
-  // Direction 👑
-  "👑 Rémy Bendayan", "👑 Anthony Chelly"
+  { e: "alex@datashake.fr", n: "Alex Kartalyan — SEA" },
+  { e: "alicia@datashake.fr", n: "Alicia Kremer — SEA" },
+  { e: "amaury@datashake.fr", n: "Amaury Dormoy — SEA" },
+  { e: "amina@datashake.fr", n: "Amina Tahri — CREA" },
+  { e: "anthony@datashake.fr", n: "Anthony Chelly — Direction" },
+  { e: "arthur.p@datashake.fr", n: "Arthur Privat — CREA" },
+  { e: "audrey.c@datashake.fr", n: "Audrey Chambon — SEO" },
+  { e: "audrey.o@datashake.fr", n: "Audrey Ortega — RH / Admin" },
+  { e: "bastien@datashake.fr", n: "Bastien Crouzat" },
+  { e: "berangere@datashake.fr", n: "Bérangère Chateigner — SEA" },
+  { e: "charlie@datashake.fr", n: "Charlie Limbour — SEO" },
+  { e: "charlotte@datashake.fr", n: "Charlotte Cohen — CREA" },
+  { e: "clara.h@datashake.fr", n: "Clara Husset — SEA" },
+  { e: "clara@datashake.fr", n: "Clara Magnin — Tech / Dev" },
+  { e: "clara.p@datashake.fr", n: "Clara Poncet — SEA" },
+  { e: "constance@datashake.fr", n: "Constance De Beaulieau — SEA" },
+  { e: "celia.l@datashake.fr", n: "Célia Lambertod — SEA" },
+  { e: "damien@datashake.fr", n: "Damien Borieu — SEO" },
+  { e: "dorian@datashake.fr", n: "Dorian Richard — SEA" },
+  { e: "elia@datashake.fr", n: "Elia Manguso — SEA" },
+  { e: "elisa.m@datashake.fr", n: "Elisa Marquette — SEA" },
+  { e: "elise@datashake.fr", n: "Elise Holtzinger — CREA" },
+  { e: "elodie.s@datashake.fr", n: "Elodie Soldo — SEA" },
+  { e: "emilie@datashake.fr", n: "Emilie Deleigue — SEA" },
+  { e: "emma@datashake.fr", n: "Emma Bonneville — Sales" },
+  { e: "erwan@datashake.fr", n: "Erwan Tanguy — SEA" },
+  { e: "estelle@datashake.fr", n: "Estelle Durivault — SEA" },
+  { e: "florence@datashake.fr", n: "Florence Pernet — SEA" },
+  { e: "felix@datashake.fr", n: "Félix Horréard — Sales" },
+  { e: "heden@datashake.fr", n: "Heden Ly — Direction" },
+  { e: "hugo.h@datashake.fr", n: "Hugo Husson — SEO" },
+  { e: "hugo.r@datashake.fr", n: "Hugo Rabain — SEA" },
+  { e: "jane@datashake.fr", n: "Jane Bonneville — SEA" },
+  { e: "julian.g@datashake.fr", n: "Julian Gillot — Tracking" },
+  { e: "juliette.c@datashake.fr", n: "Juliette Covat — SEA" },
+  { e: "jerome@datashake.fr", n: "Jérôme Chamberlain — SEO" },
+  { e: "kevin@datashake.fr", n: "Kevin Épée — CREA" },
+  { e: "kiara@datashake.fr", n: "Kiara Jules-Rosette — SEO" },
+  { e: "laurine@datashake.fr", n: "Laurine Hidalgo — SEA" },
+  { e: "lenny@datashake.fr", n: "Lenny Lesne — SEA" },
+  { e: "liam@datashake.fr", n: "Liam Laribi — CRM" },
+  { e: "lilian@datashake.fr", n: "Lilian Scarpino — Sales" },
+  { e: "lou@datashake.fr", n: "Lou Verplancke — CRM" },
+  { e: "louis.b@datashake.fr", n: "Louis Bonjour — SEA" },
+  { e: "leo@datashake.fr", n: "Léo Cottu — SEO" },
+  { e: "manon.lamache@datashake.fr", n: "Manon Lamache — SEO" },
+  { e: "manon.l@datashake.fr", n: "Manon Lamarre — SEA" },
+  { e: "manon.m@datashake.fr", n: "Manon Masa — SEO" },
+  { e: "marie-emmanuelle@datashake.fr", n: "Marie-Emmanuelle — SEA" },
+  { e: "marion@datashake.fr", n: "Marion Péan — RH / Admin" },
+  { e: "marlene@datashake.fr", n: "Marlène Adjovi — CREA" },
+  { e: "martin.d@datashake.fr", n: "Martin Dominjon" },
+  { e: "mathilde@datashake.fr", n: "Mathilde Chabert — CRM" },
+  { e: "matthieu@datashake.fr", n: "Matthieu Soum — SEA" },
+  { e: "mae-lys@datashake.fr", n: "Maë-Lys Budoc — SEO" },
+  { e: "maelle@datashake.fr", n: "Maëlle Cohen — SEA" },
+  { e: "maeva@datashake.fr", n: "Maëva Garbez — SEA" },
+  { e: "maeva.m@datashake.fr", n: "Maëva Mayé — SEA" },
+  { e: "melanie@datashake.fr", n: "Mélanie Cottenier" },
+  { e: "nathaniel@datashake.fr", n: "Nathaniel Benhamou — CREA" },
+  { e: "nicolas.h@datashake.fr", n: "Nicolas Hay — SEA" },
+  { e: "olivia@datashake.fr", n: "Olivia Troehler — SEA" },
+  { e: "paul@datashake.fr", n: "Paul Ferreira — SEA" },
+  { e: "pierre@datashake.fr", n: "Pierre Gaudard — SEO" },
+  { e: "ruben@datashake.fr", n: "Ruben Sebag — SEO" },
+  { e: "ryan@datashake.fr", n: "Ryan Curpen — SEA" },
+  { e: "remy@datashake.fr", n: "Rémy Bendayan — Direction" },
+  { e: "sacha@datashake.fr", n: "Sacha Cardine — Sales" },
+  { e: "sami.h@datashake.fr", n: "Sami Hadj-Chaouch — Tech / Dev" },
+  { e: "samuel@datashake.fr", n: "Samuel Giles — SEA" },
+  { e: "solene@datashake.fr", n: "Solène Perroy — SEA" },
+  { e: "thibault@datashake.fr", n: "Thibaut Guisnet — SEO" },
+  { e: "thomas.c@datashake.fr", n: "Thomas Casiez — SEO" },
+  { e: "thomas.j@datashake.fr", n: "Thomas Jallet — CREA" },
+  { e: "theo@datashake.fr", n: "Théo Steinlen — SEO" },
+  { e: "theodore@datashake.fr", n: "Théodore Fresnais — RH / Admin" },
+  { e: "tom@datashake.fr", n: "Tom Cayer-Barrioz — Sales" },
+  { e: "tom.h@datashake.fr", n: "Tom Hamze — SEA" },
+  { e: "valentin.l@datashake.fr", n: "Valentin Lefevre — SEO" },
+  { e: "vincent.c@datashake.fr", n: "Vincent Coupat — Sales" },
+  { e: "yanis@datashake.fr", n: "Yanis Daubié — CREA" },
+  { e: "elea@datashake.fr", n: "Éléa Decostaire — SEA" },
 ];
