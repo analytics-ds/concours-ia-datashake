@@ -45,7 +45,7 @@
   .legend { font-size: 12px; color: var(--ink-55); }
   .legend b { color: var(--ink); }
 
-  .row { display: grid; grid-template-columns: 44px 1fr auto auto; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
+  .row { display: grid; grid-template-columns: 30px 40px 1fr auto auto; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
   .row:hover { box-shadow: 0 10px 24px -18px rgba(16,16,16,.35); transform: translateY(-1px); }
   .rank { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--ink-55); text-align: center; }
   .meta .name { font-family: var(--head); font-weight: 600; font-size: 15px; color: var(--ink); }
@@ -59,6 +59,9 @@
   .votebtn { background: var(--ink); color: #fff; border: none; border-radius: 4px; padding: 11px 16px; font-family: var(--body); font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .1s; }
   .votebtn:hover { background: #2c2c2c; }
   .votebtn:active { transform: scale(.97); }
+  .avatar { border-radius: 50%; object-fit: cover; display: block; border: 1px solid var(--beige-2); background: var(--beige); }
+  .avatar-init { border-radius: 50%; background: var(--beige); color: var(--ink); display: grid; place-items: center; font-family: var(--head); font-weight: 700; border: 1px solid var(--beige-2); }
+  .pod .avatar, .pod .avatar-init { margin: 0 auto 10px; }
 
   .empty { text-align: center; color: var(--ink-55); background: var(--card); border: 1px dashed var(--line); border-radius: 10px; padding: 50px 24px; font-size: 15px; line-height: 1.6; }
   .note { text-align: center; color: var(--ink-55); font-size: 12px; margin-top: 26px; line-height: 1.6; }
@@ -124,6 +127,7 @@
 
 <script src="config.js"></script>
 <script src="data.js"></script>
+<script src="photos.js"></script>
 <script>
   const PTS_PUB = 10, PTS_VOTE = 15;
   const PROCESSES = window.PROCESSES || [];
@@ -137,6 +141,13 @@
   function score(p) { return PTS_PUB + (counts[p.id] || 0) * PTS_VOTE; }
   function ranked() { return [...PROCESSES].sort((a, b) => score(b) - score(a)); }
   function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+  function initials(name) { const p = String(name).trim().split(/\s+/); return ((p[0] || "")[0] || "") + ((p[1] || "")[0] || ""); }
+  function avatarHtml(author, size) {
+    const url = (window.PHOTOS || {})[author];
+    const st = `width:${size}px;height:${size}px`;
+    if (url) return `<img class="avatar" style="${st}" src="${esc(url)}" alt="" loading="lazy">`;
+    return `<div class="avatar-init" style="${st};font-size:${Math.round(size * 0.38)}px">${esc(initials(author).toUpperCase())}</div>`;
+  }
 
   async function fetchCounts() {
     try {
@@ -171,6 +182,7 @@
     podium.innerHTML = order.map((p, i) => p ? `
       <div class="pod ${cls[i]}">
         <div class="rankbadge">${rk[i]}</div>
+        ${avatarHtml(p.author, 56)}
         <div class="pname">${esc(p.name)}</div>
         <div class="pauthor">${esc(p.author)} · ${esc(p.bu)}</div>
         <div class="pscore">${score(p)}<span> pts</span></div>
@@ -182,6 +194,7 @@
       return `
       <div class="row">
         <div class="rank">${i + 1}</div>
+        ${avatarHtml(p.author, 40)}
         <div class="meta">
           <div class="name">${nameHtml}</div>
           <div class="info"><span class="bu">${esc(p.bu)}</span>par ${esc(p.author)}</div>
