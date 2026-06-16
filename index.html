@@ -6,77 +6,76 @@
 <title>Concours IA datashake, le leaderboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0C0D62; --navy-deep: #08093f; --ink: #1b2740; --text: #2b3344;
-    --muted: #7a869a; --bg: #eef1f7; --card: #ffffff; --border: #e4e9f2;
-    --accent-soft: #0c0d6212;
-    --gold: #e3a81f; --silver: #9aa6b8; --bronze: #c2814a; --green: #1f9d57; --red: #d64545;
-    --head: "Montserrat", Arial, Helvetica, sans-serif;
-    --body: Arial, Helvetica, sans-serif;
+    --ink: #101010; --ink-70: rgba(16,16,16,0.7); --ink-55: rgba(16,16,16,0.55);
+    --beige: #f3ede8; --beige-2: #ece3d6; --line: #e3d8c9; --card: #ffffff;
+    --gold: #c2a14e; --silver: #a9a399; --bronze: #b07d4f; --green: #2c7a4b; --red: #c0392b;
+    --head: "Instrument Sans", Arial, Helvetica, sans-serif;
+    --body: "Inter", Arial, Helvetica, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--body); background: var(--bg); color: var(--text); min-height: 100vh; padding: 32px 20px 80px; }
+  body { font-family: var(--body); background: var(--beige); color: var(--ink); min-height: 100vh; padding: 36px 20px 80px; }
   .wrap { max-width: 920px; margin: 0 auto; }
 
-  header { background: linear-gradient(135deg, #0c0d62 0%, #161885 100%); border-radius: 22px; padding: 34px 24px 30px; text-align: center; color: #fff; box-shadow: 0 18px 40px -22px #0c0d6299; }
-  .logo { height: 26px; width: auto; margin-bottom: 22px; filter: brightness(0) invert(1); }
-  .eyebrow { font-family: var(--head); text-transform: uppercase; letter-spacing: 3px; font-size: 12px; color: #b9bef0; font-weight: 700; margin-bottom: 10px; }
-  h1 { font-family: var(--head); font-size: 33px; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
-  .sub { color: #c5cbf0; margin-top: 12px; font-size: 14.5px; line-height: 1.55; }
-  .season { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; background: #ffffff1a; border: 1px solid #ffffff33; border-radius: 999px; padding: 7px 16px; font-size: 13px; color: #eef0ff; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: #46e08a; box-shadow: 0 0 0 4px #46e08a33; }
+  header { text-align: center; padding: 14px 0 30px; }
+  .logo { height: 30px; width: auto; margin-bottom: 26px; }
+  .eyebrow { display: inline-block; font-family: var(--body); text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; color: var(--ink); font-weight: 600; background: var(--card); padding: 6px 12px; border-radius: 4px; margin-bottom: 16px; }
+  h1 { font-family: var(--head); font-size: 40px; font-weight: 600; letter-spacing: 0.5px; color: var(--ink); }
+  .rule { width: 220px; height: 1px; background: var(--ink); opacity: .25; border: 0; margin: 16px auto 0; }
+  .sub { color: var(--ink-70); margin-top: 16px; font-size: 15px; line-height: 1.55; }
+  .season { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 7px 14px; font-size: 13px; color: var(--ink); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px #2c7a4b22; }
 
-  .podium { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 14px; margin: 34px 0 26px; align-items: end; }
-  .pod { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 16px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 8px 24px -18px #1b274033; }
-  .pod .rankbadge { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-family: var(--head); font-weight: 800; margin: 0 auto 12px; font-size: 16px; color: #fff; }
-  .pod.p1 { padding-bottom: 32px; border-color: #e3a81f66; box-shadow: 0 14px 34px -18px #e3a81f55; }
+  .podium { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 14px; margin: 30px 0 26px; align-items: end; }
+  .pod { background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 22px 16px; text-align: center; position: relative; overflow: hidden; }
+  .pod .rankbadge { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-family: var(--head); font-weight: 700; margin: 0 auto 12px; font-size: 16px; color: #fff; }
+  .pod.p1 { padding-bottom: 32px; border-color: var(--gold); background: linear-gradient(180deg, #fbf6ee, #ffffff 60%); }
   .pod.p1 .rankbadge { background: var(--gold); }
   .pod.p2 .rankbadge { background: var(--silver); }
   .pod.p3 .rankbadge { background: var(--bronze); }
-  .pod.p1::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #e3a81f12, transparent 55%); }
-  .pod .pname { font-family: var(--head); font-weight: 700; font-size: 15px; margin-bottom: 4px; color: var(--ink); }
-  .pod .pauthor { color: var(--muted); font-size: 13px; }
-  .pod .pscore { font-family: var(--head); font-size: 26px; font-weight: 800; margin-top: 12px; color: var(--navy); }
-  .pod .pscore span { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .pod .pname { font-family: var(--head); font-weight: 600; font-size: 15px; margin-bottom: 4px; color: var(--ink); }
+  .pod .pauthor { color: var(--ink-55); font-size: 13px; }
+  .pod .pscore { font-family: var(--head); font-size: 26px; font-weight: 700; margin-top: 12px; color: var(--ink); }
+  .pod .pscore span { font-size: 13px; color: var(--ink-55); font-weight: 600; }
 
   .toolbar { display: flex; justify-content: space-between; align-items: center; margin: 8px 4px 14px; }
-  .toolbar h2 { font-family: var(--head); font-size: 16px; font-weight: 700; color: var(--ink); }
-  .legend { font-size: 12px; color: var(--muted); }
-  .legend b { color: var(--navy); }
+  .toolbar h2 { font-family: var(--head); font-size: 17px; font-weight: 600; color: var(--ink); }
+  .legend { font-size: 12px; color: var(--ink-55); }
+  .legend b { color: var(--ink); }
 
-  .row { display: grid; grid-template-columns: 44px 1fr auto auto; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
-  .row:hover { box-shadow: 0 10px 26px -18px #1b274055; transform: translateY(-1px); }
-  .rank { font-family: var(--head); font-weight: 800; font-size: 18px; color: var(--silver); text-align: center; }
-  .meta .name { font-family: var(--head); font-weight: 700; font-size: 15px; color: var(--ink); }
+  .row { display: grid; grid-template-columns: 44px 1fr auto auto; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
+  .row:hover { box-shadow: 0 10px 24px -18px rgba(16,16,16,.35); transform: translateY(-1px); }
+  .rank { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--ink-55); text-align: center; }
+  .meta .name { font-family: var(--head); font-weight: 600; font-size: 15px; color: var(--ink); }
   .meta .name a { color: inherit; text-decoration: none; }
   .meta .name a:hover { text-decoration: underline; }
-  .meta .info { color: var(--muted); font-size: 13px; margin-top: 3px; }
-  .bu { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--navy); margin-right: 8px; text-transform: uppercase; letter-spacing: .5px; }
+  .meta .info { color: var(--ink-55); font-size: 13px; margin-top: 3px; }
+  .bu { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: var(--beige); color: var(--ink); margin-right: 8px; text-transform: uppercase; letter-spacing: .5px; }
   .stat { text-align: right; }
-  .stat .pts { font-family: var(--head); font-weight: 800; font-size: 18px; color: var(--navy); }
-  .stat .votes { color: var(--muted); font-size: 12px; margin-top: 2px; }
-  .votebtn { background: var(--navy); color: #fff; border: none; border-radius: 10px; padding: 11px 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .1s; }
-  .votebtn:hover { background: var(--navy-deep); }
+  .stat .pts { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--ink); }
+  .stat .votes { color: var(--ink-55); font-size: 12px; margin-top: 2px; }
+  .votebtn { background: var(--ink); color: #fff; border: none; border-radius: 4px; padding: 11px 16px; font-family: var(--body); font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .1s; }
+  .votebtn:hover { background: #2c2c2c; }
   .votebtn:active { transform: scale(.97); }
 
-  .empty { text-align: center; color: var(--muted); background: var(--card); border: 1px dashed var(--border); border-radius: 16px; padding: 50px 24px; font-size: 15px; line-height: 1.6; }
-  .note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 26px; line-height: 1.6; }
+  .empty { text-align: center; color: var(--ink-55); background: var(--card); border: 1px dashed var(--line); border-radius: 10px; padding: 50px 24px; font-size: 15px; line-height: 1.6; }
+  .note { text-align: center; color: var(--ink-55); font-size: 12px; margin-top: 26px; line-height: 1.6; }
 
-  .overlay { position: fixed; inset: 0; background: #0b0c3acc; backdrop-filter: blur(4px); display: none; place-items: center; padding: 20px; z-index: 50; }
+  .overlay { position: fixed; inset: 0; background: rgba(16,16,16,0.5); backdrop-filter: blur(4px); display: none; place-items: center; padding: 20px; z-index: 50; }
   .overlay.open { display: grid; }
-  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px; width: 100%; max-width: 420px; animation: pop .18s ease; box-shadow: 0 30px 60px -20px #0b0c3a66; }
+  .modal { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 28px; width: 100%; max-width: 420px; animation: pop .18s ease; box-shadow: 0 30px 60px -20px rgba(16,16,16,.4); }
   @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .modal h3 { font-family: var(--head); font-size: 19px; margin-bottom: 6px; color: var(--ink); }
-  .modal .mp { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
-  .modal label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
-  .modal input { width: 100%; padding: 13px 14px; border-radius: 11px; background: #f7f9fc; border: 1px solid var(--border); color: var(--ink); font-size: 15px; }
-  .modal input:focus { outline: none; border-color: var(--navy); background: #fff; }
+  .modal h3 { font-family: var(--head); font-size: 19px; font-weight: 600; margin-bottom: 6px; color: var(--ink); }
+  .modal .mp { color: var(--ink-55); font-size: 14px; margin-bottom: 20px; }
+  .modal label { display: block; font-size: 13px; color: var(--ink-70); margin-bottom: 8px; font-weight: 600; }
+  .modal input { width: 100%; padding: 13px 14px; border-radius: 6px; background: #faf7f3; border: 1px solid var(--line); color: var(--ink); font-size: 15px; font-family: var(--body); }
+  .modal input:focus { outline: none; border-color: var(--ink); background: #fff; }
   .modal .actions { display: flex; gap: 10px; margin-top: 22px; }
-  .modal button { flex: 1; padding: 13px; border-radius: 11px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; }
-  .btn-cancel { background: #eef1f7; color: var(--text); }
-  .btn-confirm { background: var(--navy); color: #fff; }
+  .modal button { flex: 1; padding: 13px; border-radius: 6px; font-family: var(--body); font-weight: 700; font-size: 14px; cursor: pointer; border: none; }
+  .btn-cancel { background: var(--beige); color: var(--ink); }
+  .btn-confirm { background: var(--ink); color: #fff; }
   .btn-confirm:disabled { opacity: .5; cursor: default; }
   .msg { margin-top: 14px; font-size: 13px; text-align: center; min-height: 18px; }
   .msg.err { color: var(--red); }
@@ -89,6 +88,7 @@
     <img class="logo" src="assets/logo-datashake.svg" alt="datashake">
     <div class="eyebrow">le concours</div>
     <h1>Concours IA</h1>
+    <hr class="rule">
     <p class="sub">Chaque process publié rapporte des points. Chaque collègue qui l'adopte en rapporte plus.<br>Le classement est mis à jour en direct.</p>
     <div class="season"><span class="dot"></span> Saison 1 · du 22 juin au 18 septembre 2026</div>
   </header>
