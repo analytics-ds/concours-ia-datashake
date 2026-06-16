@@ -18,7 +18,9 @@ Site statique, zéro build, zéro dépendance, déployé sur GitHub Pages.
 | Fichier | Rôle |
 |---|---|
 | `index.html` | Toute l'app (style + logique). Lit les process dans `data.js`, les votes dans Supabase via fetch. |
-| `data.js` | **Le seul fichier à éditer pour faire vivre le concours.** `window.PROCESSES` (liste des process, synchronisée à la main depuis le Catalogue Notion) + `window.TEAM` (suggestions de prénoms pour le vote). |
+| `data.js` | **Le seul fichier à éditer pour faire vivre le concours.** `window.PROCESSES` (liste des process, synchronisée à la main depuis le Catalogue Notion) + `window.TEAM` (votants = `{ e: "email", n: "Nom — BU" }`, 82 actifs). |
+
+Le vote se fait par **adresse mail `@datashake.fr`** (clé unique anti-doublon, gère les homonymes de prénom ; validation `@datashake.fr` côté front). `window.TEAM` est généré depuis l'annuaire `100🗺️ Areas/datashake/Team/Annuaire datashake - emails.md` (master de Damien) : parser le tableau (colonnes Nom, BU, Email) en objets `{e: email, n: "Nom — BU"}` triés par nom. L'annuaire vit hors du repo (dans le Drive), il n'est pas versionné ici.
 | `config.js` | URL Supabase + clé publishable (publique par design, protégée par RLS). |
 
 ### Backend Supabase (projet `ejkzpzftytpeladvcfnk`, région EU)
