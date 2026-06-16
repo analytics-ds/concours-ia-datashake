@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concours IA datashake, le leaderboard</title>
+<style>
+  :root {
+    --bg: #0f1117; --card: #181b24; --card-hover: #1f2330; --border: #272b38;
+    --text: #e9ecf2; --muted: #9aa3b2; --accent: #6c5ce7; --accent-soft: #6c5ce733;
+    --gold: #f4c542; --silver: #c7ccd6; --bronze: #cd8b50; --green: #2ecc71; --red: #ff7675;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 50% -10%, #1a1d2b 0%, var(--bg) 60%);
+    color: var(--text); min-height: 100vh; padding: 40px 20px 80px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 8px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 2px; font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; }
+  .sub { color: var(--muted); margin-top: 10px; font-size: 15px; }
+  .season { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 7px 16px; font-size: 13px; color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px #2ecc7122; }
+
+  .podium { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 14px; margin: 40px 0 28px; align-items: end; }
+  .pod { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 16px; text-align: center; position: relative; overflow: hidden; }
+  .pod .rankbadge { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; margin: 0 auto 12px; font-size: 16px; color: #11131a; }
+  .pod.p1 { padding-bottom: 30px; border-color: #f4c54255; }
+  .pod.p1 .rankbadge { background: var(--gold); }
+  .pod.p2 .rankbadge { background: var(--silver); }
+  .pod.p3 .rankbadge { background: var(--bronze); color: #fff; }
+  .pod.p1::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #f4c5420f, transparent 60%); }
+  .pod .pname { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .pod .pauthor { color: var(--muted); font-size: 13px; }
+  .pod .pscore { font-size: 26px; font-weight: 800; margin-top: 12px; }
+  .pod .pscore span { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin: 8px 4px 14px; }
+  .toolbar h2 { font-size: 16px; font-weight: 700; }
+  .legend { font-size: 12px; color: var(--muted); }
+  .legend b { color: var(--text); }
+
+  .row { display: grid; grid-template-columns: 44px 1fr auto auto; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 10px; transition: background .15s, transform .15s; }
+  .row:hover { background: var(--card-hover); transform: translateY(-1px); }
+  .rank { font-weight: 800; font-size: 18px; color: var(--muted); text-align: center; }
+  .meta .name { font-weight: 700; font-size: 15px; }
+  .meta .name a { color: inherit; text-decoration: none; }
+  .meta .name a:hover { text-decoration: underline; }
+  .meta .info { color: var(--muted); font-size: 13px; margin-top: 3px; }
+  .bu { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: #b9aef5; margin-right: 8px; text-transform: uppercase; letter-spacing: .5px; }
+  .stat { text-align: right; }
+  .stat .pts { font-weight: 800; font-size: 18px; }
+  .stat .votes { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .votebtn { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 11px 16px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; transition: filter .15s, transform .1s; }
+  .votebtn:hover { filter: brightness(1.1); }
+  .votebtn:active { transform: scale(.97); }
+
+  .empty { text-align: center; color: var(--muted); background: var(--card); border: 1px dashed var(--border); border-radius: 16px; padding: 50px 24px; font-size: 15px; line-height: 1.6; }
+  .note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 26px; line-height: 1.6; }
+
+  .overlay { position: fixed; inset: 0; background: #06070bcc; backdrop-filter: blur(4px); display: none; place-items: center; padding: 20px; z-index: 50; }
+  .overlay.open { display: grid; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px; width: 100%; max-width: 420px; animation: pop .18s ease; }
+  @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal h3 { font-size: 19px; margin-bottom: 6px; }
+  .modal .mp { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+  .modal label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
+  .modal input { width: 100%; padding: 13px 14px; border-radius: 11px; background: #11131a; border: 1px solid var(--border); color: var(--text); font-size: 15px; }
+  .modal .actions { display: flex; gap: 10px; margin-top: 22px; }
+  .modal button { flex: 1; padding: 13px; border-radius: 11px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; }
+  .btn-cancel { background: #20242f; color: var(--text); }
+  .btn-confirm { background: var(--accent); color: #fff; }
+  .btn-confirm:disabled { opacity: .5; cursor: default; }
+  .msg { margin-top: 14px; font-size: 13px; text-align: center; min-height: 18px; }
+  .msg.err { color: var(--red); }
+  .msg.ok { color: var(--green); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">datashake ai</div>
+    <h1>Concours IA, le leaderboard</h1>
+    <p class="sub">Chaque process publié rapporte des points. Chaque collègue qui l'adopte en rapporte plus.<br>Le classement est mis à jour en direct.</p>
+    <div class="season"><span class="dot"></span> Saison 1 en cours</div>
+  </header>
+
+  <div class="podium" id="podium"></div>
+
+  <div class="toolbar">
+    <h2>Classement complet</h2>
+    <div class="legend">Score = <b>10</b> publication + <b>15</b> par adoption</div>
+  </div>
+  <div id="list"></div>
+
+  <p class="note">
+    Voter pour un process signifie que tu l'utilises vraiment dans ton quotidien.<br>
+    Un même nom ne peut voter qu'une fois par process. Les votes sont anonymes côté public.
+  </p>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>J'utilise ce process</h3>
+    <p class="mp" id="modalProcess"></p>
+    <label for="voterName">Ton prénom</label>
+    <input id="voterName" list="teamList" autocomplete="off" placeholder="Commence à taper ton prénom">
+    <datalist id="teamList"></datalist>
+    <div class="msg" id="modalMsg"></div>
+    <div class="actions">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-confirm" id="confirmBtn" onclick="confirmVote()">Valider mon vote</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script>
+  const PTS_PUB = 10, PTS_VOTE = 15;
+  const PROCESSES = window.PROCESSES || [];
+  const TEAM = (window.TEAM || []).slice().sort((a, b) => a.localeCompare(b, "fr"));
+  let counts = {};        // process_id -> nombre de votes
+  let currentVoteId = null;
+
+  const headers = { "apikey": window.SB_KEY, "Authorization": "Bearer " + window.SB_KEY, "Content-Type": "application/json" };
+
+  function normName(n) { return n.trim().replace(/\s+/g, " ").toLowerCase(); }
+  function score(p) { return PTS_PUB + (counts[p.id] || 0) * PTS_VOTE; }
+  function ranked() { return [...PROCESSES].sort((a, b) => score(b) - score(a)); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+  async function fetchCounts() {
+    try {
+      const r = await fetch(window.SB_URL + "/rest/v1/rpc/get_vote_counts", { method: "POST", headers, body: "{}" });
+      const rows = await r.json();
+      counts = {};
+      (rows || []).forEach(x => counts[x.process_id] = Number(x.votes));
+    } catch (e) { /* on garde l'affichage courant en cas de coupure réseau */ }
+  }
+
+  async function castVote(processId, name) {
+    const r = await fetch(window.SB_URL + "/rest/v1/votes", {
+      method: "POST",
+      headers: Object.assign({}, headers, { "Prefer": "return=minimal" }),
+      body: JSON.stringify({ process_id: processId, voter_name: normName(name) })
+    });
+    return r.status; // 201 = ok, 409 = déjà voté
+  }
+
+  function render() {
+    const podium = document.getElementById("podium");
+    const list = document.getElementById("list");
+
+    if (PROCESSES.length === 0) {
+      podium.innerHTML = "";
+      list.innerHTML = '<div class="empty">Les premiers process arrivent bientôt.<br>Dès qu\'un process est validé par un team lead, il apparaît ici et la course commence.</div>';
+      return;
+    }
+
+    const r = ranked();
+    const order = [r[1], r[0], r[2]], cls = ["p2", "p1", "p3"], rk = [2, 1, 3];
+    podium.innerHTML = order.map((p, i) => p ? `
+      <div class="pod ${cls[i]}">
+        <div class="rankbadge">${rk[i]}</div>
+        <div class="pname">${esc(p.name)}</div>
+        <div class="pauthor">${esc(p.author)} · ${esc(p.bu)}</div>
+        <div class="pscore">${score(p)}<span> pts</span></div>
+      </div>` : "").join("");
+
+    list.innerHTML = r.map((p, i) => {
+      const v = counts[p.id] || 0;
+      const nameHtml = p.notion ? `<a href="${esc(p.notion)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name);
+      return `
+      <div class="row">
+        <div class="rank">${i + 1}</div>
+        <div class="meta">
+          <div class="name">${nameHtml}</div>
+          <div class="info"><span class="bu">${esc(p.bu)}</span>par ${esc(p.author)}</div>
+        </div>
+        <div class="stat">
+          <div class="pts">${score(p)} pts</div>
+          <div class="votes">${v} adoption${v > 1 ? "s" : ""}</div>
+        </div>
+        <button class="votebtn" onclick="openModal('${p.id}')">J'utilise ce process</button>
+      </div>`;
+    }).join("");
+  }
+
+  function openModal(id) {
+    currentVoteId = id;
+    const p = PROCESSES.find(x => x.id === id);
+    document.getElementById("modalProcess").textContent = p.name + " · " + p.author;
+    document.getElementById("teamList").innerHTML = TEAM.map(n => `<option value="${esc(n)}">`).join("");
+    const inp = document.getElementById("voterName");
+    inp.value = "";
+    document.getElementById("modalMsg").textContent = "";
+    document.getElementById("modalMsg").className = "msg";
+    document.getElementById("confirmBtn").disabled = false;
+    document.getElementById("overlay").classList.add("open");
+    setTimeout(() => inp.focus(), 50);
+  }
+  function closeModal() { document.getElementById("overlay").classList.remove("open"); currentVoteId = null; }
+
+  async function confirmVote() {
+    const name = document.getElementById("voterName").value;
+    const msg = document.getElementById("modalMsg");
+    if (!name.trim()) { msg.textContent = "Indique ton prénom d'abord."; msg.className = "msg err"; return; }
+    const btn = document.getElementById("confirmBtn");
+    btn.disabled = true;
+    msg.textContent = "Enregistrement..."; msg.className = "msg";
+    const p = PROCESSES.find(x => x.id === currentVoteId);
+    let status;
+    try { status = await castVote(currentVoteId, name); }
+    catch (e) { msg.textContent = "Souci réseau, réessaie."; msg.className = "msg err"; btn.disabled = false; return; }
+
+    if (status === 201) {
+      msg.textContent = "Vote enregistré, +" + PTS_VOTE + " pour " + p.author + ".";
+      msg.className = "msg ok";
+      await fetchCounts(); render();
+      setTimeout(closeModal, 1000);
+    } else if (status === 409) {
+      msg.textContent = "Tu as déjà voté pour ce process.";
+      msg.className = "msg err"; btn.disabled = false;
+    } else {
+      msg.textContent = "Erreur (" + status + "), réessaie.";
+      msg.className = "msg err"; btn.disabled = false;
+    }
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+  window.addEventListener("focus", async () => { await fetchCounts(); render(); });
+
+  (async function init() { render(); await fetchCounts(); render(); })();
+</script>
+</body>
+</html>

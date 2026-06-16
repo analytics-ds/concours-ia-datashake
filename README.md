@@ -1,0 +1,18 @@
+# Concours IA datashake, leaderboard
+
+Leaderboard en direct du concours IA interne datashake. Les consultants partagent des process IA, et chacun vote pour ceux qu'il utilise au quotidien.
+
+**URL publique** : https://analytics-ds.github.io/concours-ia-datashake/
+
+## Comment ça marche
+
+- Un process publié et validé par un team lead rapporte 10 points à son auteur.
+- Chaque collègue qui l'adopte vote pour lui et ajoute 15 points.
+- Score = 10 + (nombre d'adoptions x 15). Le classement se met à jour en direct.
+- Un même prénom ne peut voter qu'une fois par process. Les votes sont anonymes côté public.
+
+## Pour les contributeurs
+
+Le seul fichier à éditer pour ajouter des process est `data.js`. Voir `CLAUDE.md` pour le détail (workflow, architecture, backend).
+
+Site statique, sans build. Pour le lancer en local : ouvrir `index.html` dans un navigateur (les votes tapent directement sur la base Supabase de prod, attention).

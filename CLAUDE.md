@@ -1,0 +1,55 @@
+# Concours IA datashake, leaderboard
+
+App web statique du concours IA interne datashake (sous-projet de "datashake ai"). Affiche le classement en direct des process IA partagés par les consultants, et permet de voter pour ceux qu'on utilise.
+
+Ce repo vit **hors Google Drive** (un repo git dans Drive se corrompt). Emplacement local : `~/code/concours-ia-datashake/`. Source de la doc projet côté Drive : `200🎯 Projects/🚀 Autres projets/datashake ai/Concours IA/`.
+
+## Le concept (Format B, "la ligue continue")
+
+- Un consultant crée un process IA utile, le partage oralement à son team lead.
+- Validé, il publie une card dans le Catalogue des projets IA (Notion) : +10 points.
+- Chaque collègue qui adopte et utilise le process vote pour lui : +15 points par adoption.
+- Score d'un process = 10 + (nombre de votes x 15). Podium top 1 / top 2 en fin de saison.
+
+## Architecture
+
+Site statique, zéro build, zéro dépendance, déployé sur GitHub Pages.
+
+| Fichier | Rôle |
+|---|---|
+| `index.html` | Toute l'app (style + logique). Lit les process dans `data.js`, les votes dans Supabase via fetch. |
+| `data.js` | **Le seul fichier à éditer pour faire vivre le concours.** `window.PROCESSES` (liste des process, synchronisée à la main depuis le Catalogue Notion) + `window.TEAM` (suggestions de prénoms pour le vote). |
+| `config.js` | URL Supabase + clé publishable (publique par design, protégée par RLS). |
+
+### Backend Supabase (projet `ejkzpzftytpeladvcfnk`, région EU)
+
+- Table `votes` : `id`, `process_id` (text), `voter_name` (text, stocké normalisé en minuscules), `created_at`, contrainte unique `(process_id, voter_name)` qui fait l'anti-doublon.
+- RLS activé. Une seule policy : INSERT autorisé pour anon. **Pas de policy SELECT** : personne ne peut lire qui a voté quoi via la clé publique, seuls les totaux sortent.
+- Fonction `get_vote_counts()` (SECURITY DEFINER) : renvoie `[{process_id, votes}]` agrégé. C'est ce que le front appelle pour le classement.
+- Le front insère un vote (`POST /rest/v1/votes`), un doublon renvoie 409.
+
+Les credentials secrets (secret key, access token, mot de passe DB, clés legacy) ne sont **jamais** dans ce repo. Ils vivent dans le `.env` du master 000 data et dans Bitwarden. Seule la clé publishable est dans `config.js`.
+
+## Faire vivre le leaderboard (workflow récurrent)
+
+Quand Damien dit "ajoute les nouveaux process au concours" :
+
+1. Lire le Catalogue des projets IA (Notion) et repérer les cards validées absentes de `data.js`.
+2. Pour chaque nouveau process, ajouter dans `window.PROCESSES` un objet :
+   `{ id: "slug-stable", name: "Nom", author: "Prénom", bu: "SEO", notion: "https://..." }`.
+   L'`id` est un slug court et **stable** (ne jamais le changer après coup, il relie le process à ses votes en base).
+3. `git add -A && git commit && git push`. GitHub Pages redéploie tout seul en ~1 min.
+
+Le +10 de publication est automatique (ajouté par l'app), rien à saisir.
+
+## Déploiement
+
+- Repo GitHub : `analytics-ds/concours-ia-datashake` (public, compte datashake `analytics@datashake.fr`).
+- GitHub Pages depuis la branche `main`, racine. URL publique dans le README.
+- Aucune action manuelle après un push : Pages rebuild automatiquement.
+
+## Modifier le schéma Supabase
+
+Via l'API de management avec l'access token (dans le `.env`, clé `SUPABASE_CONCOURS_ACCESS_TOKEN`).
+Quirk : l'endpoint `api.supabase.com` bloque les requêtes sans user-agent navigateur (Cloudflare 1010), toujours passer un `User-Agent: Mozilla/...`.
+Endpoint SQL : `POST https://api.supabase.com/v1/projects/ejkzpzftytpeladvcfnk/database/query`, body `{"query":"..."}`.
