@@ -30,6 +30,17 @@ Site statique, zéro build, zéro dépendance, déployé sur GitHub Pages.
 
 Les credentials secrets (secret key, access token, mot de passe DB, clés legacy) ne sont **jamais** dans ce repo. Ils vivent dans le `.env` du master 000 data et dans Bitwarden. Seule la clé publishable est dans `config.js`.
 
+## Charte graphique (DA datashake 2026)
+
+L'interface suit la DA 2026 de datashake (celle de la newsletter AI, Figma "Newsletter AI"). À respecter pour toute évolution visuelle :
+
+- **Couleurs** : noir `#101010` (texte, boutons, logo), beige `#f3ede8` (fond de page + pills/tags), blanc `#ffffff` (cartes, pastilles), gris translucide `rgba(16,16,16,0.7)` et `0.55` (textes secondaires). Accents podium chauds compatibles beige : or `#c2a14e`, argent/taupe `#a9a399`, bronze `#b07d4f`.
+- **Typo** : titres en **Instrument Sans** (600), corps et labels en **Inter** (400/600/700), via Google Fonts.
+- **Style** : coins peu arrondis (4px pills/boutons, 10px cartes), boutons noirs texte blanc, pills beige, épuré.
+- **Logo** : `assets/logo-datashake.svg` = logo noir datashake 2026 (`logo_ds26_black.svg` de la charte), affiché tel quel (noir) sur fond clair, sans filtre. Source charte : `300🪵 Ressources/datashake/charte datashake/da 2026/`.
+
+Ne pas revenir à l'ancienne DA bleue (#0C0D62), abandonnée.
+
 ## Faire vivre le leaderboard (workflow récurrent)
 
 Quand Damien dit "ajoute les nouveaux process au concours" :
