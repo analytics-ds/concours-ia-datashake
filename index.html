@@ -105,8 +105,8 @@
   <div class="modal">
     <h3>J'utilise ce process</h3>
     <p class="mp" id="modalProcess"></p>
-    <label for="voterName">Ton prénom</label>
-    <input id="voterName" list="teamList" autocomplete="off" placeholder="Commence à taper ton prénom">
+    <label for="voterName">Ton nom</label>
+    <input id="voterName" list="teamList" autocomplete="off" placeholder="Commence à taper ton nom">
     <datalist id="teamList"></datalist>
     <div class="msg" id="modalMsg"></div>
     <div class="actions">
@@ -121,13 +121,14 @@
 <script>
   const PTS_PUB = 10, PTS_VOTE = 15;
   const PROCESSES = window.PROCESSES || [];
-  const TEAM = (window.TEAM || []).slice().sort((a, b) => a.localeCompare(b, "fr"));
+  const stripLead = s => s.replace(/^[^\p{L}]+/u, "");
+  const TEAM = (window.TEAM || []).slice().sort((a, b) => stripLead(a).localeCompare(stripLead(b), "fr"));
   let counts = {};        // process_id -> nombre de votes
   let currentVoteId = null;
 
   const headers = { "apikey": window.SB_KEY, "Authorization": "Bearer " + window.SB_KEY, "Content-Type": "application/json" };
 
-  function normName(n) { return n.trim().replace(/\s+/g, " ").toLowerCase(); }
+  function normName(n) { return n.replace(/^[^\p{L}\d]+/u, "").trim().replace(/\s+/g, " ").toLowerCase(); }
   function score(p) { return PTS_PUB + (counts[p.id] || 0) * PTS_VOTE; }
   function ranked() { return [...PROCESSES].sort((a, b) => score(b) - score(a)); }
   function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
@@ -207,7 +208,7 @@
   async function confirmVote() {
     const name = document.getElementById("voterName").value;
     const msg = document.getElementById("modalMsg");
-    if (!name.trim()) { msg.textContent = "Indique ton prénom d'abord."; msg.className = "msg err"; return; }
+    if (!name.trim()) { msg.textContent = "Indique ton nom d'abord."; msg.className = "msg err"; return; }
     const btn = document.getElementById("confirmBtn");
     btn.disabled = true;
     msg.textContent = "Enregistrement..."; msg.className = "msg";
