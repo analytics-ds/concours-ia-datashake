@@ -21,6 +21,8 @@ Site statique, zéro build, zéro dépendance, déployé sur GitHub Pages.
 | `data.js` | **Le seul fichier à éditer pour faire vivre le concours.** `window.PROCESSES` (liste des process, synchronisée à la main depuis le Catalogue Notion) + `window.TEAM` (votants = `{ e: "email", n: "Nom — BU" }`, 82 actifs). |
 
 Le vote se fait par **adresse mail `@datashake.fr`** (clé unique anti-doublon, gère les homonymes de prénom ; validation `@datashake.fr` côté front). `window.TEAM` est généré depuis l'annuaire `100🗺️ Areas/datashake/Team/Annuaire datashake - emails.md` (master de Damien) : parser le tableau (colonnes Nom, BU, Email) en objets `{e: email, n: "Nom — BU"}` triés par nom. L'annuaire vit hors du repo (dans le Drive), il n'est pas versionné ici.
+
+**Avatars** (`photos.js` + `assets/photos/`) : chaque process affiche la photo de son auteur (podium + classement), fallback initiales si absente. `window.PHOTOS` mappe `"Nom complet" -> "assets/photos/<localpart-email>.jpg"`. Avatars 128px carrés (arrondis en CSS), ~344 Ko au total. Sources : couvertures de l'organigramme Notion (S3, URL signées expirantes -> à télécharger sur le moment) en priorité, complétées par les avatars Slack via `slack_search_users` (URL `avatars.slack-edge.com`, stables). Pour ajouter un avatar : déposer un jpg 128px dans `assets/photos/<localpart>.jpg` et ajouter la ligne dans `photos.js` (clé = nom complet = `author` du process).
 | `config.js` | URL Supabase + clé publishable (publique par design, protégée par RLS). |
 
 ### Backend Supabase (projet `ejkzpzftytpeladvcfnk`, région EU)
