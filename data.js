@@ -12,8 +12,8 @@
 // =============================================================================
 
 window.PROCESSES = [
-  // En attente des premiers process validés. Exemple :
-  // { id: "cr-call-auto", name: "CR de call automatisé (Fathom + Notion)", author: "Damien Borieu", bu: "SEO", notion: "" },
+  { id: "skill-creative-strategy", name: "Skill Creative Strategy (audit créa Motion)", author: "Charlotte Cohen", bu: "CREA", notion: "https://app.notion.com/p/Skill-Creative-Strategy-audit-cr-a-Motion-3826d57819f1816db898df9080e5a47a" },
+  { id: "skill-reddit-geo", name: "Skill Reddit GEO (geo-reddit-com)", author: "Damien Borieu", bu: "SEO", notion: "https://app.notion.com/p/Skill-Reddit-GEO-geo-reddit-com-3786d57819f181dbb271dc7645c371e8" },
 ];
 
 window.TEAM = [
