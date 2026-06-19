@@ -45,7 +45,9 @@
   .legend { font-size: 12px; color: var(--ink-55); }
   .legend b { color: var(--ink); }
 
-  .row { display: grid; grid-template-columns: 30px 40px 1fr auto auto; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
+  .row { display: grid; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
+  .personrow { grid-template-columns: 30px 40px 1fr auto; }
+  .procrow { grid-template-columns: 40px 1fr auto auto; }
   .row:hover { box-shadow: 0 10px 24px -18px rgba(16,16,16,.35); transform: translateY(-1px); }
   .rank { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--ink-55); text-align: center; }
   .meta .name { font-family: var(--head); font-weight: 600; font-size: 15px; color: var(--ink); }
@@ -92,17 +94,23 @@
     <div class="eyebrow">le concours</div>
     <h1>Concours IA</h1>
     <hr class="rule">
-    <p class="sub">Chaque process publié rapporte des points. Chaque collègue qui l'adopte en rapporte plus.<br>Le classement est mis à jour en direct.</p>
+    <p class="sub">Publie des process IA, fais-les adopter par tes collègues, cumule des points.<br>Le classement est par personne et mis à jour en direct.</p>
     <div class="season"><span class="dot"></span> Saison 1 · du 22 juin au 18 septembre 2026</div>
   </header>
 
   <div class="podium" id="podium"></div>
 
   <div class="toolbar">
-    <h2>Classement complet</h2>
-    <div class="legend">Score = <b>10</b> publication + <b>15</b> par adoption</div>
+    <h2>Classement des participants</h2>
+    <div class="legend">Points cumulés sur tous tes process</div>
   </div>
   <div id="list"></div>
+
+  <div class="toolbar" style="margin-top: 34px">
+    <h2>Les process</h2>
+    <div class="legend">Vote pour ceux que tu utilises (<b>+15</b> à l'auteur)</div>
+  </div>
+  <div id="procs"></div>
 
   <p class="note">
     Voter pour un process signifie que tu l'utilises vraiment dans ton quotidien.<br>
@@ -170,30 +178,56 @@
   function render() {
     const podium = document.getElementById("podium");
     const list = document.getElementById("list");
+    const procs = document.getElementById("procs");
 
     if (PROCESSES.length === 0) {
       podium.innerHTML = "";
       list.innerHTML = '<div class="empty">Les premiers process arrivent bientôt.<br>Dès qu\'un process est validé par un team lead, il apparaît ici et la course commence.</div>';
+      procs.innerHTML = "";
       return;
     }
 
-    const r = ranked();
-    const order = [r[1], r[0], r[2]], cls = ["p2", "p1", "p3"], rk = [2, 1, 3];
-    podium.innerHTML = order.map((p, i) => p ? `
+    // Agrégation par personne : score = somme sur ses process de (10 publication + 15 x adoptions)
+    const byPerson = {};
+    PROCESSES.forEach(p => {
+      const a = byPerson[p.author] || (byPerson[p.author] = { author: p.author, bu: p.bu, procs: 0, votes: 0, total: 0 });
+      a.procs += 1;
+      a.votes += counts[p.id] || 0;
+      a.total += score(p);
+    });
+    const people = Object.values(byPerson).sort((x, y) => y.total - x.total || y.votes - x.votes);
+
+    // Podium des participants
+    const order = [people[1], people[0], people[2]], cls = ["p2", "p1", "p3"], rk = [2, 1, 3];
+    podium.innerHTML = order.map((a, i) => a ? `
       <div class="pod ${cls[i]}">
         <div class="rankbadge">${rk[i]}</div>
-        ${avatarHtml(p.author, 56)}
-        <div class="pname">${esc(p.name)}</div>
-        <div class="pauthor">${esc(p.author)} · ${esc(p.bu)}</div>
-        <div class="pscore">${score(p)}<span> pts</span></div>
+        ${avatarHtml(a.author, 56)}
+        <div class="pname">${esc(a.author)}</div>
+        <div class="pauthor">${esc(a.bu)} · ${a.procs} process</div>
+        <div class="pscore">${a.total}<span> pts</span></div>
       </div>` : "").join("");
 
-    list.innerHTML = r.map((p, i) => {
+    // Classement complet des participants
+    list.innerHTML = people.map((a, i) => `
+      <div class="row personrow">
+        <div class="rank">${i + 1}</div>
+        ${avatarHtml(a.author, 40)}
+        <div class="meta">
+          <div class="name">${esc(a.author)}</div>
+          <div class="info"><span class="bu">${esc(a.bu)}</span>${a.procs} process · ${a.votes} adoption${a.votes > 1 ? "s" : ""}</div>
+        </div>
+        <div class="stat">
+          <div class="pts">${a.total} pts</div>
+        </div>
+      </div>`).join("");
+
+    // Les process (votables)
+    procs.innerHTML = ranked().map(p => {
       const v = counts[p.id] || 0;
       const nameHtml = p.notion ? `<a href="${esc(p.notion)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name);
       return `
-      <div class="row">
-        <div class="rank">${i + 1}</div>
+      <div class="row procrow">
         ${avatarHtml(p.author, 40)}
         <div class="meta">
           <div class="name">${nameHtml}</div>
