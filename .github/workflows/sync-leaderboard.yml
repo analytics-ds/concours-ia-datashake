@@ -1,0 +1,37 @@
+name: Sync leaderboard depuis le Catalogue Notion
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # toutes les 30 min (heure UTC, léger délai possible)
+  workflow_dispatch:          # déclenchement manuel depuis l'onglet Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-leaderboard
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Régénérer data.js depuis le Catalogue
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: python3 scripts/sync_processes.py
+
+      - name: Commit si changement
+        run: |
+          if [[ -n "$(git status --porcelain data.js)" ]]; then
+            git config user.name "datashake ai bot"
+            git config user.email "analytics@datashake.fr"
+            git add data.js
+            git commit -m "Sync auto du leaderboard depuis le Catalogue Notion"
+            git push
+            echo "data.js mis à jour et poussé."
+          else
+            echo "Aucun nouveau process, rien à faire."
+          fi
