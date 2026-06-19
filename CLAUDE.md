@@ -46,17 +46,17 @@ L'interface suit la DA 2026 de datashake (celle de la newsletter AI, Figma "News
 
 Ne pas revenir à l'ancienne DA bleue (#0C0D62), abandonnée.
 
-## Faire vivre le leaderboard (workflow récurrent)
+## Faire vivre le leaderboard (AUTOMATIQUE depuis le 2026-06-19)
 
-Quand Damien dit "ajoute les nouveaux process au concours" :
+`window.PROCESSES` n'est **plus édité à la main** : un GitHub Actions (`.github/workflows/sync-leaderboard.yml`, cron toutes les 30 min) lit le Catalogue des projets IA (Notion) et régénère le bloc PROCESSES de `data.js` via `scripts/sync_processes.py`, puis commit/push si changement. Toute card du Catalogue est considérée validée (validation team lead en amont). L'`id` de chaque process = l'**id de la card Notion** (stable, relie le process à ses votes). Le +10 publication est ajouté par l'app.
 
-1. Lire le Catalogue des projets IA (Notion) et repérer les cards validées absentes de `data.js`.
-2. Pour chaque nouveau process, ajouter dans `window.PROCESSES` un objet :
-   `{ id: "slug-stable", name: "Nom", author: "Prénom", bu: "SEO", notion: "https://..." }`.
-   L'`id` est un slug court et **stable** (ne jamais le changer après coup, il relie le process à ses votes en base).
-3. `git add -A && git commit && git push`. GitHub Pages redéploie tout seul en ~1 min.
+Conséquences :
+- Ne PAS éditer `window.PROCESSES` à la main : le prochain run du cron écraserait la modif. La source de vérité des process = le Catalogue Notion.
+- `TEAM` (votants) et `PHOTOS` ne sont PAS touchés par le sync, ils restent gérés à la main.
+- Un nouvel auteur sans photo dans `photos.js` apparaît avec ses initiales (fallback), jusqu'à ce qu'on lui ajoute un avatar.
+- Le token Notion est dans le secret GitHub `NOTION_TOKEN` du repo. Déclenchement manuel possible : `gh workflow run sync-leaderboard.yml`.
 
-Le +10 de publication est automatique (ajouté par l'app), rien à saisir.
+Avant toute édition manuelle du repo (TEAM, photos, index.html), faire `git pull` : le bot `datashake ai bot` pousse des commits de sync.
 
 ## Déploiement
 
