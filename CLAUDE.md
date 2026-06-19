@@ -9,7 +9,8 @@ Ce repo vit **hors Google Drive** (un repo git dans Drive se corrompt). Emplacem
 - Un consultant crée un process IA utile, le partage oralement à son team lead.
 - Validé, il publie une card dans le Catalogue des projets IA (Notion) : +10 points.
 - Chaque collègue qui adopte et utilise le process vote pour lui : +15 points par adoption.
-- Score d'un process = 10 + (nombre de votes x 15). Podium top 1 / top 2 en fin de saison.
+- Score d'un process = 10 + (nombre de votes x 15).
+- **Classement par PERSONNE** (depuis le 2026-06-19) : le leaderboard classe les participants par la **somme des scores de tous leurs process** (publier 2 process = 20 pts de base, etc.). Le vote reste par process (section "Les process" du site), mais le rang se calcule par personne. Objectif : ne pas désavantager les petites BU (moins de votants potentiels) face aux grosses. Podium top 1 / top 2 en fin de saison.
 
 ## Architecture
 
