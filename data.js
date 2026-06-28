@@ -13,6 +13,7 @@
 
 window.PROCESSES = [
   { id: "3846d578-19f1-8081-a47e-c48d89f5ca14", name: "Outil d’audit/check tracking pour Constat et actions à mener", author: "Julian Gillot", bu: "Tracking", notion: "https://app.notion.com/p/Outil-d-audit-check-tracking-pour-Constat-et-actions-mener-3846d57819f18081a47ec48d89f5ca14" },
+  { id: "38d6d578-19f1-8151-b9a7-fc3af665eb55", name: "Skill crea-traduction-visuels", author: "Charlotte Cohen", bu: "CREA", notion: "https://app.notion.com/p/Skill-crea-traduction-visuels-38d6d57819f18151b9a7fc3af665eb55" },
   { id: "3826d578-19f1-816d-b898-df9080e5a47a", name: "Skill Creative Strategy (audit créa Motion)", author: "Charlotte Cohen", bu: "CREA", notion: "https://app.notion.com/p/Skill-Creative-Strategy-audit-cr-a-Motion-3826d57819f1816db898df9080e5a47a" },
   { id: "3786d578-19f1-81db-b271-dc7645c371e8", name: "Skill Reddit GEO (geo-reddit-com)", author: "Damien Borieu", bu: "SEO", notion: "https://app.notion.com/p/Skill-Reddit-GEO-geo-reddit-com-3786d57819f181dbb271dc7645c371e8" },
 ];
