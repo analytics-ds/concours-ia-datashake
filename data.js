@@ -14,7 +14,7 @@
 window.PROCESSES = [
   { id: "38f6d578-19f1-8039-9e58-d6ee1454e98d", name: "Audit ton compte", author: "Ryan Curpen", bu: "Transverse", notion: "https://app.notion.com/p/Audit-ton-compte-38f6d57819f180399e58d6ee1454e98d" },
   { id: "38e6d578-19f1-807d-9bf1-f4433865916a", name: "Correction de présentations Canva", author: "Elia Manguso", bu: "Transverse", notion: "https://app.notion.com/p/Correction-de-pr-sentations-Canva-38e6d57819f1807d9bf1f4433865916a" },
-  { id: "3976d578-19f1-8053-9608-cd4ad2e53750", name: "Optimisation du flux", author: "Lenny", bu: "FEED", notion: "https://app.notion.com/p/Optimisation-du-flux-3976d57819f180539608cd4ad2e53750" },
+  { id: "3976d578-19f1-8053-9608-cd4ad2e53750", name: "Optimisation du flux -  À VALIDER", author: "Lenny", bu: "FEED", notion: "https://app.notion.com/p/Optimisation-du-flux-VALIDER-3976d57819f180539608cd4ad2e53750" },
   { id: "3846d578-19f1-8081-a47e-c48d89f5ca14", name: "Outil d’audit/check tracking pour Constat et actions à mener", author: "Julian Gillot", bu: "Tracking", notion: "https://app.notion.com/p/Outil-d-audit-check-tracking-pour-Constat-et-actions-mener-3846d57819f18081a47ec48d89f5ca14" },
   { id: "38f6d578-19f1-809a-b164-c26d10223818", name: "Quality Check Crea (Verif orthographe + Mandatory per crea)", author: "Julian Gillot", bu: "CREA", notion: "https://app.notion.com/p/Quality-Check-Crea-Verif-orthographe-Mandatory-per-crea-38f6d57819f1809ab164c26d10223818" },
   { id: "38d6d578-19f1-8151-b9a7-fc3af665eb55", name: "Skill crea-traduction-visuels", author: "Charlotte Cohen", bu: "CREA", notion: "https://app.notion.com/p/Skill-crea-traduction-visuels-38d6d57819f18151b9a7fc3af665eb55" },
