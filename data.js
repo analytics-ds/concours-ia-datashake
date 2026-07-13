@@ -12,6 +12,7 @@
 // =============================================================================
 
 window.PROCESSES = [
+  { id: "39c6d578-19f1-808f-a31f-dcc97ffd1fcb", name: "AppShot", author: "Ryan Curpen", bu: "Transverse", notion: "https://app.notion.com/p/AppShot-39c6d57819f1808fa31fdcc97ffd1fcb" },
   { id: "38f6d578-19f1-8039-9e58-d6ee1454e98d", name: "Audit ton compte", author: "Ryan Curpen", bu: "Transverse", notion: "https://app.notion.com/p/Audit-ton-compte-38f6d57819f180399e58d6ee1454e98d" },
   { id: "38e6d578-19f1-807d-9bf1-f4433865916a", name: "Correction de présentations Canva", author: "Elia Manguso", bu: "Transverse", notion: "https://app.notion.com/p/Correction-de-pr-sentations-Canva-38e6d57819f1807d9bf1f4433865916a" },
   { id: "3996d578-19f1-819e-bd05-c9196b07f4d7", name: "Export Notion des reportings créa (skill creative-strategy)", author: "Charlotte Cohen", bu: "CREA", notion: "https://app.notion.com/p/Export-Notion-des-reportings-cr-a-skill-creative-strategy-3996d57819f1819ebd05c9196b07f4d7" },
