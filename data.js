@@ -12,6 +12,7 @@
 // =============================================================================
 
 window.PROCESSES = [
+  { id: "39c6d578-19f1-80e0-bbf5-cce6ffcdc009", name: "Analyse CRO", author: "Manon LAMARRE", bu: "SEA", notion: "https://app.notion.com/p/Analyse-CRO-39c6d57819f180e0bbf5cce6ffcdc009" },
   { id: "39c6d578-19f1-808f-a31f-dcc97ffd1fcb", name: "AppShot", author: "Ryan Curpen", bu: "Transverse", notion: "https://app.notion.com/p/AppShot-39c6d57819f1808fa31fdcc97ffd1fcb" },
   { id: "38f6d578-19f1-8039-9e58-d6ee1454e98d", name: "Audit ton compte", author: "Ryan Curpen", bu: "Transverse", notion: "https://app.notion.com/p/Audit-ton-compte-38f6d57819f180399e58d6ee1454e98d" },
   { id: "38e6d578-19f1-807d-9bf1-f4433865916a", name: "Correction de présentations Canva", author: "Elia Manguso", bu: "Transverse", notion: "https://app.notion.com/p/Correction-de-pr-sentations-Canva-38e6d57819f1807d9bf1f4433865916a" },
