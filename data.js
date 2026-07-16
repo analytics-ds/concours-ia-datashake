@@ -31,7 +31,6 @@ window.TEAM = [
   { e: "alex@datashake.fr", n: "Alex Kartalyan — SEA" },
   { e: "alicia@datashake.fr", n: "Alicia Kremer — SEA" },
   { e: "amaury@datashake.fr", n: "Amaury Dormoy — SEA" },
-  { e: "amina@datashake.fr", n: "Amina Tahri — CREA" },
   { e: "anthony@datashake.fr", n: "Anthony Chelly — Direction" },
   { e: "arthur.p@datashake.fr", n: "Arthur Privat — CREA" },
   { e: "audrey.c@datashake.fr", n: "Audrey Chambon — SEO" },
