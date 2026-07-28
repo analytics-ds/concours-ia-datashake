@@ -44,10 +44,12 @@ def first_ms(props, name):
     return opts[0]["name"] if opts else "?"
 
 
-def first_people(props, name):
+def all_people(props, name):
+    """Tous les auteurs de la fiche, dans l'ordre du champ Notion."""
     v = props.get(name, {})
     ppl = v.get("people", []) if v.get("type") == "people" else []
-    return ppl[0].get("name", "?") if ppl else "?"
+    names = [p.get("name", "").strip() for p in ppl]
+    return [n for n in names if n] or ["?"]
 
 
 def jstr(s):
@@ -62,11 +64,15 @@ def main():
         name = title(p)
         if not name:
             continue
-        procs.append((pg["id"], name, first_people(p, "Auteur"), first_ms(p, "BU"), pg.get("url", "")))
+        procs.append((pg["id"], name, all_people(p, "Auteur"), first_ms(p, "BU"), pg.get("url", "")))
     procs.sort(key=lambda x: x[1].lower())
 
-    lines = [f'  {{ id: "{pid}", name: "{jstr(name)}", author: "{jstr(author)}", bu: "{jstr(bu)}", notion: "{url}" }},'
-             for pid, name, author, bu, url in procs]
+    # author = 1er auteur (porte les points au classement), authors = tous (affichage des pp + noms)
+    lines = []
+    for pid, name, authors, bu, url in procs:
+        alist = ", ".join(f'"{jstr(a)}"' for a in authors)
+        lines.append(f'  {{ id: "{pid}", name: "{jstr(name)}", author: "{jstr(authors[0])}", '
+                     f'authors: [{alist}], bu: "{jstr(bu)}", notion: "{url}" }},')
     block = "window.PROCESSES = [\n" + "\n".join(lines) + "\n];\n" if procs else "window.PROCESSES = [\n];\n"
 
     content = DATA.read_text()

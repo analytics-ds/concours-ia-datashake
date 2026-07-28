@@ -47,7 +47,7 @@
 
   .row { display: grid; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
   .personrow { grid-template-columns: 30px 40px 1fr auto; }
-  .procrow { grid-template-columns: 40px 1fr auto auto; }
+  .procrow { grid-template-columns: auto 1fr auto auto; }
   .row:hover { box-shadow: 0 10px 24px -18px rgba(16,16,16,.35); transform: translateY(-1px); }
   .rank { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--ink-55); text-align: center; }
   .meta .name { font-family: var(--head); font-weight: 600; font-size: 15px; color: var(--ink); }
@@ -64,6 +64,10 @@
   .avatar { border-radius: 50%; object-fit: cover; display: block; border: 1px solid var(--beige-2); background: var(--beige); }
   .avatar-init { border-radius: 50%; background: var(--beige); color: var(--ink); display: grid; place-items: center; font-family: var(--head); font-weight: 700; border: 1px solid var(--beige-2); }
   .pod .avatar, .pod .avatar-init { margin: 0 auto 10px; }
+  /* Pile d'avatars pour les process a plusieurs auteurs (leger chevauchement) */
+  .avstack { display: flex; align-items: center; }
+  .avstack > * + * { margin-left: -12px; }
+  .avstack .avatar, .avstack .avatar-init { border: 2px solid var(--card); }
 
   .empty { text-align: center; color: var(--ink-55); background: var(--card); border: 1px dashed var(--line); border-radius: 10px; padding: 50px 24px; font-size: 15px; line-height: 1.6; }
   .note { text-align: center; color: var(--ink-55); font-size: 12px; margin-top: 26px; line-height: 1.6; }
@@ -156,6 +160,19 @@
     if (url) return `<img class="avatar" style="${st}" src="${esc(url)}" alt="" loading="lazy">`;
     return `<div class="avatar-init" style="${st};font-size:${Math.round(size * 0.38)}px">${esc(initials(author).toUpperCase())}</div>`;
   }
+  // Un process peut avoir plusieurs auteurs (champ "authors" du Catalogue Notion).
+  // "author" reste le premier auteur : c'est lui qui porte les points au classement.
+  function authorsOf(p) {
+    const list = Array.isArray(p.authors) ? p.authors.filter(Boolean) : [];
+    return list.length ? list : [p.author];
+  }
+  function avatarStackHtml(authors, size) {
+    return `<div class="avstack">${authors.map(a => avatarHtml(a, size)).join("")}</div>`;
+  }
+  function authorsLabel(authors) {
+    if (authors.length <= 1) return esc(authors[0] || "?");
+    return esc(authors.slice(0, -1).join(", ")) + " et " + esc(authors[authors.length - 1]);
+  }
 
   async function fetchCounts() {
     try {
@@ -226,12 +243,13 @@
     procs.innerHTML = ranked().map(p => {
       const v = counts[p.id] || 0;
       const nameHtml = p.notion ? `<a href="${esc(p.notion)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name);
+      const auth = authorsOf(p);
       return `
       <div class="row procrow">
-        ${avatarHtml(p.author, 40)}
+        ${avatarStackHtml(auth, 40)}
         <div class="meta">
           <div class="name">${nameHtml}</div>
-          <div class="info"><span class="bu">${esc(p.bu)}</span>par ${esc(p.author)}</div>
+          <div class="info"><span class="bu">${esc(p.bu)}</span>par ${authorsLabel(auth)}</div>
         </div>
         <div class="stat">
           <div class="pts">${score(p)} pts</div>

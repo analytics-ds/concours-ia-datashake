@@ -3,8 +3,10 @@
 // data.js = le seul fichier à éditer pour faire vivre le leaderboard.
 //
 // PROCESSES : ajouter un process validé par un team lead :
-//   { id: "slug-unique-stable", name: "Nom lisible", author: "Prénom Nom", bu: "SEO", notion: "https://..." }
+//   { id: "slug-unique-stable", name: "Nom lisible", author: "Prénom Nom", authors: ["Prénom Nom"], bu: "SEO", notion: "https://..." }
 //   id stable et unique (relie le process à ses votes). +10 publication automatique.
+//   authors = tous les auteurs (photos + noms affichés sur la carte du process) ;
+//   author = le premier d'entre eux, c'est lui qui porte les points au classement.
 //
 // TEAM : votants = adresses mail @datashake.fr (clé unique anti-doublon, gère les homonymes).
 //   Source = annuaire "100🗺️ Areas/datashake/Team/Annuaire datashake - emails.md".
