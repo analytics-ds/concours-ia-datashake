@@ -52,6 +52,46 @@ def all_people(props, name):
     return [n for n in names if n] or ["?"]
 
 
+def rich(blk, key):
+    return "".join(t.get("plain_text", "") for t in blk.get(key, {}).get("rich_text", []))
+
+
+def pitch(page_id):
+    """Resume court du process = section "Interet" de la fiche Notion.
+
+    Sert a la page de partage (vote.html) : le collegue qui recoit le lien doit
+    comprendre a quoi sert l'outil sans ouvrir Notion. Vide si la fiche n'a pas
+    de section Interet ou si l'appel echoue (le leaderboard marche sans).
+    """
+    try:
+        req = urllib.request.Request(
+            f"https://api.notion.com/v1/blocks/{page_id}/children?page_size=100",
+            headers={"Authorization": f"Bearer {TOKEN}", "Notion-Version": "2025-09-03"})
+        blocks = json.load(urllib.request.urlopen(req)).get("results", [])
+    except Exception:
+        return ""
+
+    parts, inside = [], False
+    for b in blocks:
+        t = b.get("type", "")
+        if t.startswith("heading_"):
+            head = rich(b, t).strip().lower()
+            if inside:
+                break
+            inside = head.startswith("int") and "r" in head  # "Interet" / "Intérêt"
+            continue
+        if inside and t in ("paragraph", "bulleted_list_item", "numbered_list_item"):
+            txt = rich(b, t).strip()
+            if txt:
+                parts.append(txt)
+
+    text = " ".join(parts)
+    if len(text) > 320:
+        cut = text[:320].rsplit(" ", 1)[0]
+        text = cut + "..."
+    return text
+
+
 def jstr(s):
     return s.replace("\\", "\\\\").replace('"', '\\"')
 
@@ -64,15 +104,17 @@ def main():
         name = title(p)
         if not name:
             continue
-        procs.append((pg["id"], name, all_people(p, "Auteur"), first_ms(p, "BU"), pg.get("url", "")))
+        procs.append((pg["id"], name, all_people(p, "Auteur"), first_ms(p, "BU"),
+                      pg.get("url", ""), pitch(pg["id"])))
     procs.sort(key=lambda x: x[1].lower())
 
     # author = 1er auteur (porte les points au classement), authors = tous (affichage des pp + noms)
     lines = []
-    for pid, name, authors, bu, url in procs:
+    for pid, name, authors, bu, url, txt in procs:
         alist = ", ".join(f'"{jstr(a)}"' for a in authors)
         lines.append(f'  {{ id: "{pid}", name: "{jstr(name)}", author: "{jstr(authors[0])}", '
-                     f'authors: [{alist}], bu: "{jstr(bu)}", notion: "{url}" }},')
+                     f'authors: [{alist}], bu: "{jstr(bu)}", notion: "{url}", '
+                     f'pitch: "{jstr(txt)}" }},')
     block = "window.PROCESSES = [\n" + "\n".join(lines) + "\n];\n" if procs else "window.PROCESSES = [\n];\n"
 
     content = DATA.read_text()

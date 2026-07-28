@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J'utilise ce process — Concours IA datashake</title>
+<meta name="description" content="Un collègue partage un process IA de l'agence. Découvre à quoi il sert et dis en un clic que tu l'utilises.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="J'utilise ce process — Concours IA datashake">
+<meta property="og:description" content="Un collègue partage un process IA de l'agence. Découvre à quoi il sert et dis en un clic que tu l'utilises.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #101010; --ink-70: rgba(16,16,16,0.7); --ink-55: rgba(16,16,16,0.55);
+    --beige: #f3ede8; --beige-2: #ece3d6; --line: #e3d8c9; --card: #ffffff;
+    --green: #2c7a4b; --red: #c0392b;
+    --head: "Instrument Sans", Arial, Helvetica, sans-serif;
+    --body: "Inter", Arial, Helvetica, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--beige); color: var(--ink); font-family: var(--body);
+         min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .wrap { width: 100%; max-width: 560px; }
+  .eyebrow { display: inline-block; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;
+             font-weight: 600; background: var(--card); padding: 6px 12px; border-radius: 4px; margin-bottom: 14px; }
+  .card { background: var(--card); border: 1px solid var(--beige-2); border-radius: 14px; padding: 28px;
+          box-shadow: 0 18px 40px -30px rgba(16,16,16,.4); }
+  h1 { font-family: var(--head); font-size: 24px; line-height: 1.25; margin: 0 0 6px; }
+  h1 a { color: inherit; text-decoration: none; }
+  h1 a:hover { text-decoration: underline; }
+  .bu { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+        background: var(--beige); text-transform: uppercase; letter-spacing: .5px; margin-right: 8px; }
+  .by { display: flex; align-items: center; gap: 10px; margin: 16px 0 18px; }
+  .avstack { display: flex; align-items: center; }
+  .avstack > * + * { margin-left: -12px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block;
+            border: 2px solid var(--card); background: var(--beige); }
+  .avatar-init { width: 36px; height: 36px; border-radius: 50%; background: var(--beige); display: grid;
+                 place-items: center; font-family: var(--head); font-weight: 700; font-size: 14px;
+                 border: 2px solid var(--card); }
+  .bynames { font-size: 14px; color: var(--ink-70); }
+  .pitch { font-size: 15px; line-height: 1.6; color: var(--ink-70); border-left: 3px solid var(--line);
+           padding-left: 14px; margin: 0 0 22px; }
+  .stats { display: flex; gap: 22px; font-size: 13px; color: var(--ink-55); margin-bottom: 24px; }
+  .stats b { font-family: var(--head); font-size: 19px; color: var(--ink); display: block; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px;
+          font-family: var(--body); font-size: 15px; background: #fff; color: var(--ink); }
+  input:focus { outline: 2px solid var(--ink); outline-offset: -1px; }
+  .hint { font-size: 12px; color: var(--ink-55); margin-top: 7px; }
+  button { width: 100%; margin-top: 18px; background: var(--ink); color: #fff; border: none; border-radius: 6px;
+           padding: 14px; font-family: var(--body); font-weight: 700; font-size: 14px; cursor: pointer;
+           transition: background .15s, transform .1s; }
+  button:hover:not(:disabled) { background: #2c2c2c; }
+  button:active:not(:disabled) { transform: scale(.99); }
+  button:disabled { opacity: .55; cursor: default; }
+  .msg { margin-top: 14px; font-size: 13.5px; text-align: center; min-height: 18px; line-height: 1.5; }
+  .msg.err { color: var(--red); }
+  .msg.ok { color: var(--green); }
+  .foot { text-align: center; margin-top: 18px; font-size: 13px; color: var(--ink-55); }
+  .foot a { color: var(--ink); }
+  @media (max-width: 520px) { .card { padding: 22px; } h1 { font-size: 21px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="eyebrow">Concours IA datashake</span>
+  <div class="card" id="card">
+    <div id="content" style="display:none">
+      <h1 id="pname"></h1>
+      <div><span class="bu" id="pbu"></span></div>
+      <div class="by">
+        <div class="avstack" id="pav"></div>
+        <div class="bynames" id="pby"></div>
+      </div>
+      <p class="pitch" id="ppitch"></p>
+      <div class="stats">
+        <div><b id="pvotes">—</b>adoptions</div>
+        <div><b id="ppts">—</b>points</div>
+      </div>
+      <label for="mail">Ton adresse mail datashake</label>
+      <input id="mail" type="email" list="teamList" placeholder="prenom@datashake.fr" autocomplete="email">
+      <datalist id="teamList"></datalist>
+      <div class="hint">Une seule adoption par personne et par process.</div>
+      <button id="btn">J'utilise ce process</button>
+      <div class="msg" id="msg"></div>
+    </div>
+    <div id="missing" style="display:none">
+      <h1>Process introuvable</h1>
+      <p class="pitch">Ce lien de partage ne correspond à aucun process du catalogue. Il a peut-être été renommé ou retiré.</p>
+    </div>
+  </div>
+  <div class="foot"><a href="index.html">Voir le leaderboard complet</a></div>
+</div>
+
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="photos.js"></script>
+<script>
+  // Page de partage d'UN process : meme systeme de vote que le leaderboard
+  // (table votes de Supabase, 1 vote par email et par process, 409 si doublon).
+  // URL : vote.html?p=<id du process> ou ?p=<mot du nom>, ex. vote.html?p=dataslide
+  const PTS_PUB = 10, PTS_VOTE = 15;
+  const PROCESSES = window.PROCESSES || [];
+  const TEAM = (window.TEAM || []).slice().sort((a, b) => (a.n || "").localeCompare(b.n || "", "fr"));
+  const headers = { "apikey": window.SB_KEY, "Authorization": "Bearer " + window.SB_KEY, "Content-Type": "application/json" };
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+  function initials(name) { const p = String(name).trim().split(/\s+/); return ((p[0] || "")[0] || "") + ((p[1] || "")[0] || ""); }
+  function avatarHtml(a) {
+    const url = (window.PHOTOS || {})[a];
+    if (url) return `<img class="avatar" src="${esc(url)}" alt="">`;
+    return `<div class="avatar-init">${esc(initials(a).toUpperCase())}</div>`;
+  }
+  function authorsOf(p) {
+    const l = Array.isArray(p.authors) ? p.authors.filter(Boolean) : [];
+    return l.length ? l : [p.author];
+  }
+  function authorsLabel(a) {
+    if (a.length <= 1) return esc(a[0] || "?");
+    return esc(a.slice(0, -1).join(", ")) + " et " + esc(a[a.length - 1]);
+  }
+  // Accepte l'id exact, sinon cherche le process dont le nom contient le mot passe en parametre.
+  function findProcess(q) {
+    if (!q) return null;
+    const k = q.trim().toLowerCase();
+    return PROCESSES.find(p => p.id.toLowerCase() === k)
+        || PROCESSES.find(p => (p.name || "").toLowerCase().includes(k))
+        || null;
+  }
+
+  const proc = findProcess(new URLSearchParams(location.search).get("p"));
+  let votes = 0;
+
+  async function loadVotes() {
+    try {
+      const r = await fetch(window.SB_URL + "/rest/v1/rpc/get_vote_counts", { method: "POST", headers, body: "{}" });
+      const rows = await r.json();
+      const row = (rows || []).find(x => x.process_id === proc.id);
+      votes = row ? Number(row.votes) : 0;
+    } catch (e) { /* on affiche 0 plutot que de bloquer la page */ }
+    document.getElementById("pvotes").textContent = votes;
+    document.getElementById("ppts").textContent = PTS_PUB + PTS_VOTE * votes;
+  }
+
+  function fill() {
+    const auth = authorsOf(proc);
+    document.getElementById("pname").innerHTML = proc.notion
+      ? `<a href="${esc(proc.notion)}" target="_blank" rel="noopener">${esc(proc.name)}</a>` : esc(proc.name);
+    document.getElementById("pbu").textContent = proc.bu || "";
+    document.getElementById("pav").innerHTML = auth.map(avatarHtml).join("");
+    document.getElementById("pby").innerHTML = "par " + authorsLabel(auth);
+    document.getElementById("ppitch").textContent = proc.pitch
+      || "Ouvre la fiche Notion pour voir en détail à quoi sert ce process et comment le reproduire.";
+    document.getElementById("teamList").innerHTML = TEAM.map(t => `<option value="${esc(t.e)}">${esc(t.n)}</option>`).join("");
+    document.title = proc.name + " — Concours IA datashake";
+    document.getElementById("content").style.display = "";
+  }
+
+  async function vote() {
+    const mail = document.getElementById("mail").value.trim();
+    const msg = document.getElementById("msg");
+    const btn = document.getElementById("btn");
+    if (!mail) { msg.textContent = "Indique ton adresse mail d'abord."; msg.className = "msg err"; return; }
+    if (!/@datashake\.fr$/i.test(mail)) { msg.textContent = "Utilise ton adresse @datashake.fr."; msg.className = "msg err"; return; }
+    btn.disabled = true;
+    msg.textContent = "Enregistrement..."; msg.className = "msg";
+    let status;
+    try {
+      const r = await fetch(window.SB_URL + "/rest/v1/votes", {
+        method: "POST",
+        headers: Object.assign({}, headers, { "Prefer": "return=minimal" }),
+        body: JSON.stringify({ process_id: proc.id, voter_name: mail.toLowerCase() })
+      });
+      status = r.status;
+    } catch (e) {
+      msg.textContent = "Souci réseau, réessaie."; msg.className = "msg err"; btn.disabled = false; return;
+    }
+    if (status === 201) {
+      msg.innerHTML = "Adoption enregistrée, +" + PTS_VOTE + " pour " + authorsLabel(authorsOf(proc)) + ".<br>Merci !";
+      msg.className = "msg ok";
+      await loadVotes();
+    } else if (status === 409) {
+      msg.textContent = "Tu as déjà déclaré utiliser ce process.";
+      msg.className = "msg err";
+    } else {
+      msg.textContent = "Erreur (" + status + "), réessaie."; msg.className = "msg err"; btn.disabled = false;
+    }
+  }
+
+  if (!proc) {
+    document.getElementById("missing").style.display = "";
+  } else {
+    fill();
+    loadVotes();
+    document.getElementById("btn").addEventListener("click", vote);
+    document.getElementById("mail").addEventListener("keydown", e => { if (e.key === "Enter") vote(); });
+  }
+</script>
+</body>
+</html>

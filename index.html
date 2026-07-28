@@ -46,7 +46,7 @@
   .legend b { color: var(--ink); }
 
   .row { display: grid; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
-  .personrow { grid-template-columns: 30px 40px 1fr auto; }
+  .personrow { grid-template-columns: 30px auto 1fr auto; }
   .procrow { grid-template-columns: auto 1fr auto auto; }
   .row:hover { box-shadow: 0 10px 24px -18px rgba(16,16,16,.35); transform: translateY(-1px); }
   .rank { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--ink-55); text-align: center; }
@@ -63,11 +63,11 @@
   .votebtn:active { transform: scale(.97); }
   .avatar { border-radius: 50%; object-fit: cover; display: block; border: 1px solid var(--beige-2); background: var(--beige); }
   .avatar-init { border-radius: 50%; background: var(--beige); color: var(--ink); display: grid; place-items: center; font-family: var(--head); font-weight: 700; border: 1px solid var(--beige-2); }
-  .pod .avatar, .pod .avatar-init { margin: 0 auto 10px; }
-  /* Pile d'avatars pour les process a plusieurs auteurs (leger chevauchement) */
+  /* Pile d'avatars pour les process/duos a plusieurs auteurs (leger chevauchement) */
   .avstack { display: flex; align-items: center; }
   .avstack > * + * { margin-left: -12px; }
   .avstack .avatar, .avstack .avatar-init { border: 2px solid var(--card); }
+  .pod .avstack { justify-content: center; margin-bottom: 10px; }
 
   .empty { text-align: center; color: var(--ink-55); background: var(--card); border: 1px dashed var(--line); border-radius: 10px; padding: 50px 24px; font-size: 15px; line-height: 1.6; }
   .note { text-align: center; color: var(--ink-55); font-size: 12px; margin-top: 26px; line-height: 1.6; }
@@ -204,23 +204,28 @@
       return;
     }
 
-    // Agrégation par personne : score = somme sur ses process de (10 publication + 15 x adoptions)
-    const byPerson = {};
+    // Agrégation par participant : score = somme sur ses process de (10 publication + 15 x adoptions).
+    // Un process à plusieurs auteurs compte comme UN participant : le duo (ou trio) est une entrée
+    // à part entière, avec toutes les photos et tous les noms. Une personne peut donc apparaître
+    // à la fois en solo (ses process seuls) et en duo (ceux qu'elle a co-signés).
+    const byTeam = {};
     PROCESSES.forEach(p => {
-      const a = byPerson[p.author] || (byPerson[p.author] = { author: p.author, bu: p.bu, procs: 0, votes: 0, total: 0 });
+      const auth = authorsOf(p);
+      const key = auth.join(" + ");
+      const a = byTeam[key] || (byTeam[key] = { authors: auth, bu: p.bu, procs: 0, votes: 0, total: 0 });
       a.procs += 1;
       a.votes += counts[p.id] || 0;
       a.total += score(p);
     });
-    const people = Object.values(byPerson).sort((x, y) => y.total - x.total || y.votes - x.votes);
+    const people = Object.values(byTeam).sort((x, y) => y.total - x.total || y.votes - x.votes);
 
     // Podium des participants
     const order = [people[1], people[0], people[2]], cls = ["p2", "p1", "p3"], rk = [2, 1, 3];
     podium.innerHTML = order.map((a, i) => a ? `
       <div class="pod ${cls[i]}">
         <div class="rankbadge">${rk[i]}</div>
-        ${avatarHtml(a.author, 56)}
-        <div class="pname">${esc(a.author)}</div>
+        ${avatarStackHtml(a.authors, 56)}
+        <div class="pname">${authorsLabel(a.authors)}</div>
         <div class="pauthor">${esc(a.bu)} · ${a.procs} process</div>
         <div class="pscore">${a.total}<span> pts</span></div>
       </div>` : "").join("");
@@ -229,9 +234,9 @@
     list.innerHTML = people.map((a, i) => `
       <div class="row personrow">
         <div class="rank">${i + 1}</div>
-        ${avatarHtml(a.author, 40)}
+        ${avatarStackHtml(a.authors, 40)}
         <div class="meta">
-          <div class="name">${esc(a.author)}</div>
+          <div class="name">${authorsLabel(a.authors)}</div>
           <div class="info"><span class="bu">${esc(a.bu)}</span>${a.procs} process · ${a.votes} adoption${a.votes > 1 ? "s" : ""}</div>
         </div>
         <div class="stat">
@@ -263,7 +268,7 @@
   function openModal(id) {
     currentVoteId = id;
     const p = PROCESSES.find(x => x.id === id);
-    document.getElementById("modalProcess").textContent = p.name + " · " + p.author;
+    document.getElementById("modalProcess").textContent = p.name + " · " + authorsOf(p).join(" et ");
     document.getElementById("teamList").innerHTML = TEAM.map(t => `<option value="${esc(t.e)}">${esc(t.n)}</option>`).join("");
     const inp = document.getElementById("voterName");
     inp.value = "";
@@ -289,7 +294,7 @@
     catch (e) { msg.textContent = "Souci réseau, réessaie."; msg.className = "msg err"; btn.disabled = false; return; }
 
     if (status === 201) {
-      msg.textContent = "Vote enregistré, +" + PTS_VOTE + " pour " + p.author + ".";
+      msg.textContent = "Vote enregistré, +" + PTS_VOTE + " pour " + authorsOf(p).join(" et ") + ".";
       msg.className = "msg ok";
       await fetchCounts(); render();
       setTimeout(closeModal, 1000);
