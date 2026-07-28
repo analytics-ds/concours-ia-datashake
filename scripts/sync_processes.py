@@ -93,7 +93,16 @@ def pitch(page_id):
 
 
 def jstr(s):
-    return s.replace("\\", "\\\\").replace('"', '\\"')
+    """Echappe une valeur pour une chaine JS sur UNE seule ligne.
+
+    Les paragraphes Notion peuvent contenir des sauts de ligne doux : laisses tels
+    quels ils coupent la chaine et cassent data.js (donc tout le leaderboard).
+    On les remplace par des espaces, comme les separateurs de ligne Unicode.
+    """
+    s = s.replace("\\", "\\\\").replace('"', '\\"')
+    for ch in ("\r\n", "\n", "\r", "\u2028", "\u2029"):
+        s = s.replace(ch, " ")
+    return " ".join(s.split())
 
 
 def main():

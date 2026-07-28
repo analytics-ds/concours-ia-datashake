@@ -23,6 +23,17 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: python3 scripts/sync_processes.py
 
+      # Garde-fou : un data.js invalide casse TOUT le leaderboard (window.PROCESSES
+      # reste vide et la page n'affiche plus rien). On refuse de committer dans ce cas.
+      - name: Vérifier que data.js est du JS valide
+        run: |
+          node --check data.js
+          node -e "global.window={}; require('./data.js');
+            const p = window.PROCESSES || [];
+            if (!p.length) { console.error('window.PROCESSES est vide'); process.exit(1); }
+            p.forEach(x => { if (!x.id || !x.name) { console.error('entrée incomplète', x); process.exit(1); } });
+            console.log(p.length + ' process, data.js valide.');"
+
       - name: Commit si changement
         run: |
           if [[ -n "$(git status --porcelain data.js)" ]]; then
