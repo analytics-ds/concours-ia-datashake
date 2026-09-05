@@ -141,6 +141,23 @@
 <script src="data.js"></script>
 <script src="photos.js"></script>
 <script>
+  // Lien profond depuis un outil du catalogue : `?vote=<id>` (ou `?p=<id>`, ou un
+  // mot du nom du process) amene directement sur la page d'adoption de CE process
+  // au lieu du leaderboard complet. Sans ca, le parametre etait ignore : la
+  // personne atterrissait sur la liste entiere et devait retrouver la carte a la
+  // main, donc l'adoption ne se posait jamais. Redirection AVANT tout rendu.
+  (function deepLinkToVote() {
+    const q = new URLSearchParams(location.search);
+    const want = q.get("vote") || q.get("p");
+    if (!want) return;
+    const k = want.trim().toLowerCase();
+    const list = window.PROCESSES || [];
+    const hit = list.find(p => String(p.id).toLowerCase() === k)
+             || list.find(p => String(p.name || "").toLowerCase().includes(k));
+    if (!hit) return;   // id inconnu : on laisse le leaderboard s'afficher
+    location.replace("vote.html?p=" + encodeURIComponent(hit.id));
+  })();
+
   const PTS_PUB = 10, PTS_VOTE = 15;
   const PROCESSES = window.PROCESSES || [];
   const TEAM = (window.TEAM || []).slice().sort((a, b) => (a.n || "").localeCompare(b.n || "", "fr"));
