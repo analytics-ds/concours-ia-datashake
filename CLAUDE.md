@@ -2,7 +2,7 @@
 
 App web statique du concours IA interne datashake (sous-projet de "datashake ai"). Affiche le classement en direct des process IA partagés par les consultants, et permet de voter pour ceux qu'on utilise.
 
-Ce repo vit **hors Google Drive** (un repo git dans Drive se corrompt). Emplacement local : `~/code/concours-ia-datashake/`. Source de la doc projet côté Drive : `200🎯 Projects/🚀 Autres projets/datashake ai/Concours IA/`.
+Ce repo vit **hors Google Drive** (un repo git dans Drive se corrompt). Emplacement local : `~/code/sites/concours-ia-datashake/`. Source de la doc projet côté Drive : `100🗺️ Areas/datashake ai/Concours IA/`.
 
 ## Le concept (Format B, "la ligue continue")
 
