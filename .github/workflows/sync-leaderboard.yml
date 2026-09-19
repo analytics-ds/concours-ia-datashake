@@ -1,8 +1,11 @@
 name: Sync leaderboard depuis le Catalogue Notion
 
 on:
-  schedule:
-    - cron: "*/30 * * * *"   # toutes les 30 min (heure UTC, léger délai possible)
+  # Cron désactivé le 2026-09-19 : fin de la saison 1 du concours, le leaderboard
+  # n'est plus publié, il n'y a plus rien à resynchroniser automatiquement.
+  # Pour rouvrir une saison 2 : décommenter les 2 lignes ci-dessous.
+  # schedule:
+  #   - cron: "*/30 * * * *"   # toutes les 30 min (heure UTC, léger délai possible)
   workflow_dispatch:          # déclenchement manuel depuis l'onglet Actions
 
 permissions:

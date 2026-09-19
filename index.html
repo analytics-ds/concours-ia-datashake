@@ -3,314 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Concours IA datashake, le leaderboard</title>
+<title>Concours IA datashake, saison 1 terminée</title>
+<meta name="description" content="Les votes du concours IA datashake sont clos. Les résultats seront annoncés au prochain weekly, vendredi 25 septembre.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Concours IA datashake, saison 1 terminée">
+<meta property="og:description" content="Les votes sont clos. Résultats au prochain weekly, vendredi 25 septembre.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink: #101010; --ink-70: rgba(16,16,16,0.7); --ink-55: rgba(16,16,16,0.55);
-    --beige: #f3ede8; --beige-2: #ece3d6; --line: #e3d8c9; --card: #ffffff;
-    --gold: #c2a14e; --silver: #a9a399; --bronze: #b07d4f; --green: #2c7a4b; --red: #c0392b;
+    --beige: #f3ede8; --line: #e3d8c9; --card: #ffffff; --gold: #c2a14e;
     --head: "Instrument Sans", Arial, Helvetica, sans-serif;
     --body: "Inter", Arial, Helvetica, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--body); background: var(--beige); color: var(--ink); min-height: 100vh; padding: 36px 20px 80px; }
-  .wrap { max-width: 920px; margin: 0 auto; }
-
-  header { text-align: center; padding: 14px 0 30px; }
-  .logo { height: 30px; width: auto; margin-bottom: 26px; }
-  .eyebrow { display: inline-block; font-family: var(--body); text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; color: var(--ink); font-weight: 600; background: var(--card); padding: 6px 12px; border-radius: 4px; margin-bottom: 16px; }
-  h1 { font-family: var(--head); font-size: 40px; font-weight: 600; letter-spacing: 0.5px; color: var(--ink); }
-  .rule { width: 220px; height: 1px; background: var(--ink); opacity: .25; border: 0; margin: 16px auto 0; }
-  .sub { color: var(--ink-70); margin-top: 16px; font-size: 15px; line-height: 1.55; }
-  .season { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 7px 14px; font-size: 13px; color: var(--ink); }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px #2c7a4b22; }
-
-  .podium { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 14px; margin: 30px 0 26px; align-items: end; }
-  .pod { background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 22px 16px; text-align: center; position: relative; overflow: hidden; }
-  .pod .rankbadge { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-family: var(--head); font-weight: 700; margin: 0 auto 12px; font-size: 16px; color: #fff; }
-  .pod.p1 { padding-bottom: 32px; border-color: var(--gold); background: linear-gradient(180deg, #fbf6ee, #ffffff 60%); }
-  .pod.p1 .rankbadge { background: var(--gold); }
-  .pod.p2 .rankbadge { background: var(--silver); }
-  .pod.p3 .rankbadge { background: var(--bronze); }
-  .pod .pname { font-family: var(--head); font-weight: 600; font-size: 15px; margin-bottom: 4px; color: var(--ink); }
-  .pod .pauthor { color: var(--ink-55); font-size: 13px; }
-  .pod .pscore { font-family: var(--head); font-size: 26px; font-weight: 700; margin-top: 12px; color: var(--ink); }
-  .pod .pscore span { font-size: 13px; color: var(--ink-55); font-weight: 600; }
-
-  .toolbar { display: flex; justify-content: space-between; align-items: center; margin: 8px 4px 14px; }
-  .toolbar h2 { font-family: var(--head); font-size: 17px; font-weight: 600; color: var(--ink); }
-  .legend { font-size: 12px; color: var(--ink-55); }
-  .legend b { color: var(--ink); }
-
-  .row { display: grid; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--beige-2); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
-  .personrow { grid-template-columns: 30px auto 1fr auto; }
-  .procrow { grid-template-columns: auto 1fr auto auto; }
-  .row:hover { box-shadow: 0 10px 24px -18px rgba(16,16,16,.35); transform: translateY(-1px); }
-  .rank { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--ink-55); text-align: center; }
-  .meta .name { font-family: var(--head); font-weight: 600; font-size: 15px; color: var(--ink); }
-  .meta .name a { color: inherit; text-decoration: none; }
-  .meta .name a:hover { text-decoration: underline; }
-  .meta .info { color: var(--ink-55); font-size: 13px; margin-top: 3px; }
-  .bu { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: var(--beige); color: var(--ink); margin-right: 8px; text-transform: uppercase; letter-spacing: .5px; }
-  .stat { text-align: right; }
-  .stat .pts { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--ink); }
-  .stat .votes { color: var(--ink-55); font-size: 12px; margin-top: 2px; }
-  .votebtn { background: var(--ink); color: #fff; border: none; border-radius: 4px; padding: 11px 16px; font-family: var(--body); font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .1s; }
-  .votebtn:hover { background: #2c2c2c; }
-  .votebtn:active { transform: scale(.97); }
-  .avatar { border-radius: 50%; object-fit: cover; display: block; border: 1px solid var(--beige-2); background: var(--beige); }
-  .avatar-init { border-radius: 50%; background: var(--beige); color: var(--ink); display: grid; place-items: center; font-family: var(--head); font-weight: 700; border: 1px solid var(--beige-2); }
-  /* Pile d'avatars pour les process/duos a plusieurs auteurs (leger chevauchement) */
-  .avstack { display: flex; align-items: center; }
-  .avstack > * + * { margin-left: -12px; }
-  .avstack .avatar, .avstack .avatar-init { border: 2px solid var(--card); }
-  .pod .avstack { justify-content: center; margin-bottom: 10px; }
-
-  .empty { text-align: center; color: var(--ink-55); background: var(--card); border: 1px dashed var(--line); border-radius: 10px; padding: 50px 24px; font-size: 15px; line-height: 1.6; }
-  .note { text-align: center; color: var(--ink-55); font-size: 12px; margin-top: 26px; line-height: 1.6; }
-
-  .overlay { position: fixed; inset: 0; background: rgba(16,16,16,0.5); backdrop-filter: blur(4px); display: none; place-items: center; padding: 20px; z-index: 50; }
-  .overlay.open { display: grid; }
-  .modal { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 28px; width: 100%; max-width: 420px; animation: pop .18s ease; box-shadow: 0 30px 60px -20px rgba(16,16,16,.4); }
-  @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .modal h3 { font-family: var(--head); font-size: 19px; font-weight: 600; margin-bottom: 6px; color: var(--ink); }
-  .modal .mp { color: var(--ink-55); font-size: 14px; margin-bottom: 20px; }
-  .modal label { display: block; font-size: 13px; color: var(--ink-70); margin-bottom: 8px; font-weight: 600; }
-  .modal input { width: 100%; padding: 13px 14px; border-radius: 6px; background: #faf7f3; border: 1px solid var(--line); color: var(--ink); font-size: 15px; font-family: var(--body); }
-  .modal input:focus { outline: none; border-color: var(--ink); background: #fff; }
-  .modal .actions { display: flex; gap: 10px; margin-top: 22px; }
-  .modal button { flex: 1; padding: 13px; border-radius: 6px; font-family: var(--body); font-weight: 700; font-size: 14px; cursor: pointer; border: none; }
-  .btn-cancel { background: var(--beige); color: var(--ink); }
-  .btn-confirm { background: var(--ink); color: #fff; }
-  .btn-confirm:disabled { opacity: .5; cursor: default; }
-  .msg { margin-top: 14px; font-size: 13px; text-align: center; min-height: 18px; }
-  .msg.err { color: var(--red); }
-  .msg.ok { color: var(--green); }
+  body {
+    font-family: var(--body); background: var(--beige); color: var(--ink);
+    min-height: 100vh; display: grid; place-items: center; padding: 40px 20px;
+    text-align: center;
+  }
+  .wrap { max-width: 860px; width: 100%; }
+  .logo { display: block; height: 28px; width: auto; margin: 0 auto 26px; }
+  .eyebrow {
+    display: inline-block; text-transform: uppercase; letter-spacing: 1.5px;
+    font-size: 12px; font-weight: 600; background: var(--card);
+    padding: 7px 14px; border-radius: 4px; margin-bottom: 22px;
+  }
+  h1 {
+    font-family: var(--head); font-weight: 700; line-height: 1.02;
+    letter-spacing: -1px; font-size: clamp(34px, 6.2vw, 70px);
+  }
+  h1 .hl { display: block; color: var(--gold); }
+  .rule { width: 220px; height: 1px; background: var(--ink); opacity: .25; border: 0; margin: 26px auto; }
+  .lead { font-size: clamp(17px, 2.4vw, 22px); line-height: 1.55; color: var(--ink-70); max-width: 620px; margin: 0 auto; }
+  .lead b { color: var(--ink); font-weight: 700; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 26px 24px; margin-top: 30px; display: inline-block; max-width: 560px;
+  }
+  .card .when { font-family: var(--head); font-weight: 700; font-size: clamp(22px, 3.6vw, 32px); line-height: 1.25; }
+  .card .where { color: var(--ink-55); font-size: 14px; margin-top: 10px; line-height: 1.5; }
+  .note { color: var(--ink-55); font-size: 13px; margin-top: 26px; line-height: 1.7; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
+  <main class="wrap">
     <img class="logo" src="assets/logo-datashake.svg" alt="datashake">
-    <div class="eyebrow">le concours</div>
-    <h1>Concours IA</h1>
+    <span class="eyebrow">Concours IA datashake, saison 1</span>
+
+    <h1>Les votes<br>sont clos.<span class="hl">Place au verdict.</span></h1>
+
     <hr class="rule">
-    <p class="sub">Publie des process IA, fais-les adopter par tes collègues, cumule des points.<br>Le classement est par personne et mis à jour en direct.</p>
-    <div class="season"><span class="dot"></span> Saison 1 · du 22 juin au 18 septembre 2026</div>
-  </header>
 
-  <div class="podium" id="podium"></div>
+    <p class="lead">
+      La saison 1 s'est arrêtée <b>vendredi 18 septembre à 23h59</b>.
+      Le classement est figé, le leaderboard est retiré le temps du dépouillement.
+    </p>
 
-  <div class="toolbar">
-    <h2>Classement des participants</h2>
-    <div class="legend">Points cumulés sur tous tes process</div>
-  </div>
-  <div id="list"></div>
-
-  <div class="toolbar" style="margin-top: 34px">
-    <h2>Les process</h2>
-    <div class="legend">Vote pour ceux que tu utilises (<b>+15</b> à l'auteur)</div>
-  </div>
-  <div id="procs"></div>
-
-  <p class="note">
-    Voter pour un process signifie que tu l'utilises vraiment dans ton quotidien.<br>
-    Une même adresse ne peut voter qu'une fois par process. Les votes sont anonymes côté public.
-  </p>
-</div>
-
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <h3>J'utilise ce process</h3>
-    <p class="mp" id="modalProcess"></p>
-    <label for="voterName">Ton adresse mail datashake</label>
-    <input id="voterName" type="email" list="teamList" autocomplete="off" placeholder="prenom@datashake.fr">
-    <datalist id="teamList"></datalist>
-    <div class="msg" id="modalMsg"></div>
-    <div class="actions">
-      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
-      <button class="btn-confirm" id="confirmBtn" onclick="confirmVote()">Valider mon vote</button>
+    <div class="card">
+      <div class="when">Résultats au prochain weekly,<br>vendredi 25 septembre.</div>
+      <div class="where">Podium, scores et cadeaux dévoilés en direct. Rendez-vous là-bas.</div>
     </div>
-  </div>
-</div>
 
-<script src="config.js"></script>
-<script src="data.js"></script>
-<script src="photos.js"></script>
-<script>
-  const PTS_PUB = 10, PTS_VOTE = 15;
-  const PROCESSES = window.PROCESSES || [];
-  const TEAM = (window.TEAM || []).slice().sort((a, b) => (a.n || "").localeCompare(b.n || "", "fr"));
-  let counts = {};        // process_id -> nombre de votes
-  let currentVoteId = null;
-
-  const headers = { "apikey": window.SB_KEY, "Authorization": "Bearer " + window.SB_KEY, "Content-Type": "application/json" };
-
-  function normName(n) { return n.trim().toLowerCase(); }
-  function score(p) { return PTS_PUB + (counts[p.id] || 0) * PTS_VOTE; }
-  function ranked() { return [...PROCESSES].sort((a, b) => score(b) - score(a)); }
-  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
-  function initials(name) { const p = String(name).trim().split(/\s+/); return ((p[0] || "")[0] || "") + ((p[1] || "")[0] || ""); }
-  function avatarHtml(author, size) {
-    const url = (window.PHOTOS || {})[author];
-    const st = `width:${size}px;height:${size}px`;
-    if (url) return `<img class="avatar" style="${st}" src="${esc(url)}" alt="" loading="lazy">`;
-    return `<div class="avatar-init" style="${st};font-size:${Math.round(size * 0.38)}px">${esc(initials(author).toUpperCase())}</div>`;
-  }
-  // Un process peut avoir plusieurs auteurs (champ "authors" du Catalogue Notion).
-  // "author" reste le premier auteur : c'est lui qui porte les points au classement.
-  function authorsOf(p) {
-    const list = Array.isArray(p.authors) ? p.authors.filter(Boolean) : [];
-    return list.length ? list : [p.author];
-  }
-  function avatarStackHtml(authors, size) {
-    return `<div class="avstack">${authors.map(a => avatarHtml(a, size)).join("")}</div>`;
-  }
-  function authorsLabel(authors) {
-    if (authors.length <= 1) return esc(authors[0] || "?");
-    return esc(authors.slice(0, -1).join(", ")) + " et " + esc(authors[authors.length - 1]);
-  }
-
-  async function fetchCounts() {
-    try {
-      const r = await fetch(window.SB_URL + "/rest/v1/rpc/get_vote_counts", { method: "POST", headers, body: "{}" });
-      const rows = await r.json();
-      counts = {};
-      (rows || []).forEach(x => counts[x.process_id] = Number(x.votes));
-    } catch (e) { /* on garde l'affichage courant en cas de coupure réseau */ }
-  }
-
-  async function castVote(processId, name) {
-    const r = await fetch(window.SB_URL + "/rest/v1/votes", {
-      method: "POST",
-      headers: Object.assign({}, headers, { "Prefer": "return=minimal" }),
-      body: JSON.stringify({ process_id: processId, voter_name: normName(name) })
-    });
-    return r.status; // 201 = ok, 409 = déjà voté
-  }
-
-  function render() {
-    const podium = document.getElementById("podium");
-    const list = document.getElementById("list");
-    const procs = document.getElementById("procs");
-
-    if (PROCESSES.length === 0) {
-      podium.innerHTML = "";
-      list.innerHTML = '<div class="empty">Les premiers process arrivent bientôt.<br>Dès qu\'un process est validé par un team lead, il apparaît ici et la course commence.</div>';
-      procs.innerHTML = "";
-      return;
-    }
-
-    // Agrégation par participant : score = somme sur ses process de (10 publication + 15 x adoptions).
-    // Un process à plusieurs auteurs compte comme UN participant : le duo (ou trio) est une entrée
-    // à part entière, avec toutes les photos et tous les noms. Une personne peut donc apparaître
-    // à la fois en solo (ses process seuls) et en duo (ceux qu'elle a co-signés).
-    const byTeam = {};
-    PROCESSES.forEach(p => {
-      const auth = authorsOf(p);
-      const key = auth.join(" + ");
-      const a = byTeam[key] || (byTeam[key] = { authors: auth, bu: p.bu, procs: 0, votes: 0, total: 0 });
-      a.procs += 1;
-      a.votes += counts[p.id] || 0;
-      a.total += score(p);
-    });
-    const people = Object.values(byTeam).sort((x, y) => y.total - x.total || y.votes - x.votes);
-
-    // Podium des participants
-    const order = [people[1], people[0], people[2]], cls = ["p2", "p1", "p3"], rk = [2, 1, 3];
-    podium.innerHTML = order.map((a, i) => a ? `
-      <div class="pod ${cls[i]}">
-        <div class="rankbadge">${rk[i]}</div>
-        ${avatarStackHtml(a.authors, 56)}
-        <div class="pname">${authorsLabel(a.authors)}</div>
-        <div class="pauthor">${esc(a.bu)} · ${a.procs} process</div>
-        <div class="pscore">${a.total}<span> pts</span></div>
-      </div>` : "").join("");
-
-    // Classement complet des participants
-    list.innerHTML = people.map((a, i) => `
-      <div class="row personrow">
-        <div class="rank">${i + 1}</div>
-        ${avatarStackHtml(a.authors, 40)}
-        <div class="meta">
-          <div class="name">${authorsLabel(a.authors)}</div>
-          <div class="info"><span class="bu">${esc(a.bu)}</span>${a.procs} process · ${a.votes} adoption${a.votes > 1 ? "s" : ""}</div>
-        </div>
-        <div class="stat">
-          <div class="pts">${a.total} pts</div>
-        </div>
-      </div>`).join("");
-
-    // Les process (votables)
-    procs.innerHTML = ranked().map(p => {
-      const v = counts[p.id] || 0;
-      const nameHtml = p.notion ? `<a href="${esc(p.notion)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name);
-      const auth = authorsOf(p);
-      return `
-      <div class="row procrow">
-        ${avatarStackHtml(auth, 40)}
-        <div class="meta">
-          <div class="name">${nameHtml}</div>
-          <div class="info"><span class="bu">${esc(p.bu)}</span>par ${authorsLabel(auth)}</div>
-        </div>
-        <div class="stat">
-          <div class="pts">${score(p)} pts</div>
-          <div class="votes">${v} adoption${v > 1 ? "s" : ""}</div>
-        </div>
-        <button class="votebtn" onclick="openModal('${p.id}')">J'utilise ce process</button>
-      </div>`;
-    }).join("");
-  }
-
-  function openModal(id) {
-    currentVoteId = id;
-    const p = PROCESSES.find(x => x.id === id);
-    document.getElementById("modalProcess").textContent = p.name + " · " + authorsOf(p).join(" et ");
-    document.getElementById("teamList").innerHTML = TEAM.map(t => `<option value="${esc(t.e)}">${esc(t.n)}</option>`).join("");
-    const inp = document.getElementById("voterName");
-    inp.value = "";
-    document.getElementById("modalMsg").textContent = "";
-    document.getElementById("modalMsg").className = "msg";
-    document.getElementById("confirmBtn").disabled = false;
-    document.getElementById("overlay").classList.add("open");
-    setTimeout(() => inp.focus(), 50);
-  }
-  function closeModal() { document.getElementById("overlay").classList.remove("open"); currentVoteId = null; }
-
-  async function confirmVote() {
-    const name = document.getElementById("voterName").value;
-    const msg = document.getElementById("modalMsg");
-    if (!name.trim()) { msg.textContent = "Indique ton adresse mail d'abord."; msg.className = "msg err"; return; }
-    if (!/@datashake\.fr$/i.test(name.trim())) { msg.textContent = "Utilise ton adresse @datashake.fr."; msg.className = "msg err"; return; }
-    const btn = document.getElementById("confirmBtn");
-    btn.disabled = true;
-    msg.textContent = "Enregistrement..."; msg.className = "msg";
-    const p = PROCESSES.find(x => x.id === currentVoteId);
-    let status;
-    try { status = await castVote(currentVoteId, name); }
-    catch (e) { msg.textContent = "Souci réseau, réessaie."; msg.className = "msg err"; btn.disabled = false; return; }
-
-    if (status === 201) {
-      msg.textContent = "Vote enregistré, +" + PTS_VOTE + " pour " + authorsOf(p).join(" et ") + ".";
-      msg.className = "msg ok";
-      await fetchCounts(); render();
-      setTimeout(closeModal, 1000);
-    } else if (status === 409) {
-      msg.textContent = "Tu as déjà voté pour ce process.";
-      msg.className = "msg err"; btn.disabled = false;
-    } else {
-      msg.textContent = "Erreur (" + status + "), réessaie.";
-      msg.className = "msg err"; btn.disabled = false;
-    }
-  }
-
-  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
-  window.addEventListener("focus", async () => { await fetchCounts(); render(); });
-
-  (async function init() { render(); await fetchCounts(); render(); })();
-</script>
+    <p class="note">
+      Merci à toutes celles et ceux qui ont publié un process et voté pour ceux des autres.
+    </p>
+  </main>
 </body>
 </html>
